@@ -15,9 +15,9 @@
 *.dvi
 *-converted-to.*
 # these rules might exclude image files for figures etc.
-# *.ps
-# *.eps
-# *.pdf
+*.ps
+*.eps
+*.pdf
 
 ## Bibliography auxiliary files (bibtex/biblatex/biber):
 *.bbl
@@ -31,153 +31,153 @@
 ## Build tool auxiliary files:
 *.fdb_latexmk
 *.synctex
-*.synctex.gz
+	*.synctex.gz
 *.synctex.gz(busy)
-*.pdfsync
+	*.pdfsync
 
 ## Auxiliary and intermediate files from other packages:
 # algorithms
-*.alg
-*.loa
+	*.alg
+	*.loa
 
 # achemso
-acs-*.bib
+	acs-*.bib
 
 # amsthm
-*.thm
+	*.thm
 
 # beamer
-*.nav
-*.snm
-*.vrb
+	*.nav
+	*.snm
+	*.vrb
 
 # cprotect
-*.cpt
+	*.cpt
 
 # fixme
-*.lox
+	*.lox
 
 #(r)(e)ledmac/(r)(e)ledpar
-*.end
-*.?end
-*.[1-9]
-*.[1-9][0-9]
-*.[1-9][0-9][0-9]
-*.[1-9]R
-*.[1-9][0-9]R
-*.[1-9][0-9][0-9]R
-*.eledsec[1-9]
-*.eledsec[1-9]R
-*.eledsec[1-9][0-9]
-*.eledsec[1-9][0-9]R
-*.eledsec[1-9][0-9][0-9]
-*.eledsec[1-9][0-9][0-9]R
+	*.end
+	*.?end
+	*.[1-9]
+	*.[1-9][0-9]
+	*.[1-9][0-9][0-9]
+	*.[1-9]R
+	*.[1-9][0-9]R
+	*.[1-9][0-9][0-9]R
+	*.eledsec[1-9]
+	*.eledsec[1-9]R
+	*.eledsec[1-9][0-9]
+	*.eledsec[1-9][0-9]R
+	*.eledsec[1-9][0-9][0-9]
+	*.eledsec[1-9][0-9][0-9]R
 
 # glossaries
-*.acn
-*.acr
-*.glg
-*.glo
-*.gls
-*.glsdefs
+	*.acn
+	*.acr
+	*.glg
+	*.glo
+	*.gls
+	*.glsdefs
 
 # gnuplottex
-*-gnuplottex-*
+	*-gnuplottex-*
 
 # hyperref
-*.brf
+	*.brf
 
 # knitr
-*-concordance.tex
+	*-concordance.tex
 # TODO Comment the next line if you want to keep your tikz graphics files
-*.tikz
-*-tikzDictionary
+	*.tikz
+	*-tikzDictionary
 
 # listings
-*.lol
+	*.lol
 
 # makeidx
-*.idx
-*.ilg
-*.ind
-*.ist
+	*.idx
+	*.ilg
+	*.ind
+	*.ist
 
 # minitoc
-*.maf
-*.mlf
-*.mlt
-*.mtc
-*.mtc[0-9]
-*.mtc[1-9][0-9]
+	*.maf
+	*.mlf
+	*.mlt
+	*.mtc
+	*.mtc[0-9]
+	*.mtc[1-9][0-9]
 
 # minted
-_minted*
-*.pyg
+	_minted*
+	*.pyg
 
 # morewrites
-*.mw
+	*.mw
 
 # mylatexformat
-*.fmt
+	*.fmt
 
 # nomencl
-*.nlo
+	*.nlo
 
 # sagetex
-*.sagetex.sage
-*.sagetex.py
-*.sagetex.scmd
+	*.sagetex.sage
+	*.sagetex.py
+	*.sagetex.scmd
 
 # sympy
-*.sout
-*.sympy
-sympy-plots-for-*.tex/
+	*.sout
+	*.sympy
+	sympy-plots-for-*.tex/
 
 # pdfcomment
-*.upa
-*.upb
+	*.upa
+	*.upb
 
 # pythontex
-*.pytxcode
-pythontex-files-*/
+	*.pytxcode
+	pythontex-files-*/
 
 # thmtools
-*.loe
+	*.loe
 
 # TikZ & PGF
-*.dpth
-*.md5
-*.auxlock
+	*.dpth
+	*.md5
+	*.auxlock
 
 # todonotes
-*.tdo
+	*.tdo
 
 # xindy
-*.xdy
+	*.xdy
 
 # xypic precompiled matrices
-*.xyc
+	*.xyc
 
 # endfloat
-*.ttt
-*.fff
+	*.ttt
+	*.fff
 
 # Latexian
-TSWLatexianTemp*
+	TSWLatexianTemp*
 
 ## Editors:
 # WinEdt
-*.bak
-*.sav
+	*.bak
+	*.sav
 
 # Texpad
-.texpadtmp
+	.texpadtmp
 
 # Kile
-*.backup
+	*.backup
 
 # KBibTeX
-*~[0-9]*
+	*~[0-9]*
 
 # auctex
-*auto*
+	*auto*
