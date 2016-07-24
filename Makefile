@@ -13,12 +13,12 @@ all: 	resume.pdf
 
 resume.pdf: resume.dvi
 	dvipdf resume.en.dvi resume.en.pdf
-	#dvipdf resume.de.dvi resume.de.pdf
+	dvipdf resume.de.dvi resume.de.pdf
 	pdflatex resume.zh.tex
 
 resume.dvi: ${SRC}
 	latex resume.en.tex
-	#latex resume.de.tex
+	latex resume.de.tex
 	#latex resume.zh.tex
 
 clean:
