@@ -1,3 +1,4 @@
+#+STYLE: <link rel="stylesheet" type="text/css" href="org.css" />
 * cluster index 
 ** 聚集索引表示表中存储的数据按照索引的顺序存储 
 *** 搜索效率高
@@ -7,7 +8,28 @@
 *** 搜索效率稍低
 *** 能有多个 
 *** 更新数据影响小 
-[[./cluster.jpg]]
+    [[./cluster.jpg]]
+    
+* 事务隔离级别
+** Read uncommitted 读未提交
+*** 脏读 
+** Read committed 读提交
+*** 不可重复读  Sql Server , Oracle
+** Repeatable read
+*** 幻读 Mysql  
+** Serializable 
+*** 顺序执行，很少用
+    #+CAPTION: 事务隔离级别 
+    |                  | 脏读 | 不可重复读 | 幻读 |
+    |------------------+------+------------+------|
+    | Read uncommitted | √   | √         | √   |
+    |------------------+------+------------+------|
+    | Read committed   | ×   | √         | √   |
+    |------------------+------+------------+------|
+    | Repeatable read  | ×   | ×         | √   |
+    |------------------+------+------------+------|
+    | Serializable     | ×   | ×         | ×   |
+    |------------------+------+------------+------|
 
 * truncate和delete 
 ** delete会产生rollback的log，truncate不产生，速度快
@@ -15,13 +37,13 @@
 ** truncate会释放空间，delete不会
 ** truncate会回滚high water mark，delete不会
 ** truncate是DDL操作，delete是DML操作
-
+   
 * group by，having，distinct
 ** HAVING后的条件不能用别名COUNT>3 必须使用COUNT(*) >3，否则报列名 "COUNT" 无效
 ** having子句中的每一个元素并不一定要出现在select列表中
 ** 使用GROUP BY 子句时，SELECT列表中的非汇总列必须为GROUP BY列表中的项
 ** ORDER BY 子句中的列必须出现在GROUP BY的列表项中 
-
+   
 * 优化SQL 
 ** 选择最有效率的表名顺序 
 *** 数据库往往从右到左的顺序处理FROM子句中的表名

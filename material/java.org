@@ -1,3 +1,4 @@
+#+STYLE: <link rel="stylesheet" type="text/css" href="org.css" />
 * jvm 
  #+CAPTION: java virtual machine
  [[./jvm.png]]
