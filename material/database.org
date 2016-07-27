@@ -1,4 +1,4 @@
-#+STYLE: <link rel="stylesheet" type="text/css" href="org.css" />
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="org.css" />
 * cluster index 
 ** 聚集索引表示表中存储的数据按照索引的顺序存储 
 *** 搜索效率高

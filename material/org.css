@@ -195,9 +195,9 @@
         margin-left:auto;  
         margin-right:auto;  
         padding:0.7em;  
-    /* border:1px solid #CCC; */  
-    /* border-radius:10px; */  
-    /* -moz-border-radius:10px; */  
+	/* border:1px solid #CCC; */  
+	/* border-radius:10px; */  
+	/* -moz-border-radius:10px; */  
     }  
     .org-info-box img {  
         float:left;  
@@ -1059,7 +1059,7 @@
        h4:before { 
        content: "*** " 
        } 
-       */  
+   */  
     
     h2 {  
         font-family:Arial,sans-serif;  
@@ -1205,9 +1205,9 @@
         margin-left:auto;  
         margin-right:auto;  
         padding:0.7em;  
-    /* border:1px solid #CCC; */  
-    /* border-radius:10px; */  
-    /* -moz-border-radius:10px; */  
+	/* border:1px solid #CCC; */  
+	/* border-radius:10px; */  
+	/* -moz-border-radius:10px; */  
     }  
     .org-info-box img {  
         float:left;  
@@ -1794,7 +1794,7 @@
         color: #bc8f8f;  
     }  
     .outline-text-1, .outline-text-2, .outline-text-3, .outline-text-4, .outline-text-5, .outline-text-6 {  
-    /* Add more spacing between section. Padding, so that folding with org-info.js works as expected. */  
+	/* Add more spacing between section. Padding, so that folding with org-info.js works as expected. */  
 	
     }  
     

@@ -1,4 +1,4 @@
-#+STYLE: <link rel="stylesheet" type="text/css" href="org.css" />
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="org.css" />
 * Java线程：概念与原理 
 ** 操作系统中线程和进程 
 *** 进程：进程是指一个内存中运行的应用程序，每个进程都有自己独立的一块内存空间 

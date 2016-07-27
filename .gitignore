@@ -179,5 +179,4 @@
 # KBibTeX
 	*~[0-9]*
 
-# auctex
-	*auto*
+*.html
