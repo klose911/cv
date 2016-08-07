@@ -1,4 +1,4 @@
-#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="org.css" />
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="main.css" />
 * cluster index 
 ** 聚集索引表示表中存储的数据按照索引的顺序存储 
 *** 搜索效率高
@@ -140,3 +140,4 @@
      AND (BUFFER_GETS-DISK_READS)/BUFFER_GETS < 0.8 
      ORDER BY 4 DESC; 
    #+END_SRC
+h

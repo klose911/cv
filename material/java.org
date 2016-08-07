@@ -1,4 +1,4 @@
-#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="org.css" />
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="main.css" />
 * jvm 
  #+CAPTION: java virtual machine
  [[./jvm.png]]
