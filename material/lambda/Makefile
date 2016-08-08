@@ -17,9 +17,9 @@ lambda.ps: lambda.dvi
 
 lambda.dvi: ${SRC}
 	latex lambda.tex
-	# bibtex axis.aux
-	# latex axis.tex
-	# latex axis.tex
+	# bibtex lambda.aux
+	latex lambda.tex
+	latex lambda.tex
 
 clean:
 	-rm -f *.dvi *.ps *.pdf *.toc *.log *.aux *.out *.nav *.snm *.vrb *.blg *.bbl
