@@ -22,79 +22,77 @@
 
 \mode<article> % only for the article version      
 {                                                                          
-        \usepackage{fullpage}                                          
-        \usepackage{hyperref}                                         
+  \usepackage{fullpage}                                          
+  \usepackage{hyperref}                                         
 }
 
 \mode<presentation> { \setbeamertemplate{background canvas}
-        [vertical shading][bottom=blue!8,top=blue!15]     
-        \usetheme{Darmstadt}
-        \usefonttheme[onlysmall]{structurebold}
+  [vertical shading][bottom=blue!8,top=blue!15]     
+  \usetheme{Darmstadt}
+  \usefonttheme[onlysmall]{structurebold}
 }
 
 \lstset{basicstyle=\ttfamily\tiny, keywordstyle=\color{blue!70}, commentstyle=\color{red!50!green!50!blue!50}, frame=shadowbox, rulesepcolor=\color{red!20!green!20!blue!20}, xleftmargin=2em,xrightmargin=2em, aboveskip=1em}
 
 \begin{document}
 \begin{CJK}{UTF8}{song}
-        \bibliographystyle{unsrt} 
-        \title{\CJKfamily{hei} $\lambda$演算}
-        \author{\CJKfamily{hei} 吴善良}
-        \institute{\CJKfamily{hei} 易保网络技术有限公司}
-        \date{\CJKfamily{hei} \today}
+\bibliographystyle{unsrt} 
+\title{\CJKfamily{hei} $\lambda$演算}
+\author{\CJKfamily{hei} 吴善良}
+%% \institute{\CJKfamily{hei} 易保网络技术有限公司}
+\date{\CJKfamily{hei} \today}
 
-        \frame{\titlepage}
-        \tableofcontents
-        \section{\CJKfamily{hei} $\lambda$演算}
+\frame{\titlepage}
+\tableofcontents
+\section{\CJKfamily{hei} $\lambda$演算}
 
-        \begin{frame}
-          \frametitle{\CJKfamily{hei} $\lambda$演算介绍}
-          \begin{itemize}
-          \item $\lambda$演算可看做是一个简单的语义清楚的形式语言，用来解释复杂的程序设计语言或者计算模型
-          \item $\lambda$演算通常包含两部分
-            \begin{itemize} 
-            \item{语法}：合法表达式（{\color{red}$\lambda$}表达式）的形式系统
-            \item{语义}：变换规则的形式系统
-            \end{itemize}
-          \end{itemize}
-        \end{frame}
+\begin{frame}
+  \frametitle{\CJKfamily{hei} $\lambda$演算介绍}
+  \begin{itemize}
+  \item $\lambda$演算可看做是一个简单的语义清楚的形式语言，用来解释复杂的程序设计语言或者计算模型
+  \item $\lambda$演算通常包含两部分
+    \begin{itemize} 
+    \item{语法}：合法表达式（{\color{red}$\lambda$}表达式）的形式系统
+    \item{语义}：变换规则的形式系统
+    \end{itemize}
+  \end{itemize}
+\end{frame}
 
-        \subsection{ \CJKfamily{hei} $\lambda$表达式}
+\subsection{ \CJKfamily{hei} $\lambda$表达式}
 
-        \begin{frame}
-          \frametitle{\CJKfamily{hei} $\lambda$表达式:定义}
-          \begin{itemize}
-          \item $\lambda$表达式由变量名，抽象
-            符号$\lambda$ . ( )组成 
-              \begin{eqnarray}
-                <\textrm{$\lambda$表达式}> & ::= & <\textrm{变量名}> \\
-                & & \mid\quad <\textrm{$\lambda$表达式}>\quad<\textrm{$\lambda$表达式}> \\ 
-                & & \mid\quad \lambda<\textrm{变量名}>.<\textrm{$\lambda$表达式}> \\
-                & & \mid\quad (<\textrm{$\lambda$表达式}>)
-              \end{eqnarray}    
-        \item 没有类型，没有常量 
-        \item 变量名不仅可以代表变量，还可以代表{\color{blue}函数}
-        \end{itemize}
-      \end{frame}
- 
+\begin{frame}
+  \frametitle{\CJKfamily{hei} $\lambda$表达式:定义}
+  \begin{itemize}
+  \item $\lambda$表达式由变量名，抽象
+    符号$\lambda$ . ( )组成 
+    \begin{eqnarray}
+      <\textrm{$\lambda$表达式}> & ::= & <\textrm{变量名}> \\
+                                 & & \mid\quad <\textrm{$\lambda$表达式}>\quad<\textrm{$\lambda$表达式}> \\ 
+                                 & & \mid\quad \lambda<\textrm{变量名}>.<\textrm{$\lambda$表达式}> \\
+                                 & & \mid\quad (<\textrm{$\lambda$表达式}>)
+    \end{eqnarray}    
+  \item 没有类型，没有常量 
+  \item 变量名不仅可以代表变量，还可以代表{\color{blue}函数}
+  \end{itemize}
+\end{frame}
+
 \begin{frame} 
-           \frametitle{\CJKfamily{hei} $\lambda$表达式:解释} 
-         \begin{itemize}
-\item{E1 E2}： 函数调用, E1是函数名，E2是实参 
-\item{$\lambda$x.E}： 函数抽象，x是形参，E是函数体
-\end{itemize} 
+  \frametitle{\CJKfamily{hei} $\lambda$表达式:解释} 
+  \begin{itemize}
+  \item{E1 E2}： 函数调用, E1是函数名，E2是实参 
+  \item{$\lambda$x.E}： 函数抽象，x是形参，E是函数体
+  \end{itemize} 
 
 \end{frame}
 
-
-
-  \section{\CJKfamily{hei}致谢}
-  \begin{frame}
-          \begin{Huge}
-                  \begin{center}
-                          谢谢大家的聆听!
-                  \end{center}
-          \end{Huge}
-  \end{frame}
-  %% \bibliography{axis.bib} 
+\section{\CJKfamily{hei}致谢}
+\begin{frame}
+  \begin{Huge}
+    \begin{center}
+      谢谢大家的聆听!
+    \end{center}
+  \end{Huge}
+\end{frame}
+%% \bibliography{axis.bib} 
 \end{CJK}
 \end{document}
