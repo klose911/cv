@@ -79,10 +79,35 @@
 \begin{frame} 
   \frametitle{\CJKfamily{hei} $\lambda$表达式:解释} 
   \begin{itemize}
-  \item{E1 E2}： 函数调用, E1是函数名，E2是实参 
-  \item{$\lambda$x.E}： 函数抽象，x是形参，E是函数体
+  \item{E1 E2}： 函数调用, E1是函数名，E2是实参
+    \begin{itemize} 
+    \item 施用型表达式是左结合规则
+      \begin{displaymath} 
+        E_1  E_2 E_3 \dots E_n= (((E_1 E_2) E_3) \dots) E_n
+      \end{displaymath}  
+    \end{itemize} 
+  \item{$\lambda$x.E}： 函数抽象，x是形参，E是函数体 
+    \begin{itemize} 
+    \item 抽象型表达式是右结合规则
+      \begin{displaymath} 
+        \lambda x_1 \centerdot  \lambda  x_2 \centerdot  
+        \dots \lambda x_n \centerdot E = \lambda x_1
+        \centerdot (\lambda x_2 \centerdot
+        (\dots (\lambda x_n \centerdot E) \dots ) \,)  
+      \end{displaymath}  
+    \end{itemize} 
+  \item 复杂例子 
+    \begin{displaymath} 
+      \underline{\lambda x_1 x_2 \dots x_n} \centerdot E = \lambda x_1 \centerdot  \lambda  x_2 \centerdot  
+      \dots \lambda x_n \centerdot E
+    \end{displaymath} 
+    \begin{displaymath} 
+      \lambda x_1 \centerdot  \lambda  x_2 \centerdot  
+      \dots \lambda x_n \centerdot \underline{E_1  E_2
+         E_3 \dots E_n} =  \lambda x_1 \centerdot  \lambda  x_2 \centerdot  
+      \dots \lambda x_n \centerdot (E_1 E_2 E_3 \dots E_n) 
+    \end{displaymath} 
   \end{itemize} 
-
 \end{frame}
 
 \section{\CJKfamily{hei}致谢}
