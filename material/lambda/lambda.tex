@@ -62,22 +62,25 @@
 
 \begin{frame}
   \frametitle{\CJKfamily{hei} $\lambda$表达式:定义}
-  \begin{itemize}
-  \item $\lambda$表达式由变量名，抽象
+  \newtheorem{LE}{$\lambda$表达式} 
+  \begin{LE}
+    $\lambda$表达式由变量名，抽象
     符号$\lambda$ . ( )组成 
     \begin{eqnarray}
       <\textrm{$\lambda$表达式}> & ::= & <\textrm{变量名}> \\
                                  & & \mid\quad <\textrm{$\lambda$表达式}>\quad<\textrm{$\lambda$表达式}> \\ 
                                  & & \mid\quad \lambda<\textrm{变量名}>.<\textrm{$\lambda$表达式}> \\
                                  & & \mid\quad (<\textrm{$\lambda$表达式}>)
-    \end{eqnarray}    
+    \end{eqnarray} 
+  \end{LE}      
+  \begin{itemize}
   \item 没有类型，没有常量 
   \item 变量名不仅可以代表变量，还可以代表{\color{blue}函数}
   \end{itemize}
 \end{frame}
 
 \begin{frame} 
-  \frametitle{\CJKfamily{hei} $\lambda$表达式:解释} 
+  \frametitle{\CJKfamily{hei} $\lambda$表达式：优先级规则} 
   \begin{itemize}
   \item{E1 E2}： 函数调用, E1是函数名，E2是实参
     \begin{itemize} 
@@ -104,10 +107,93 @@
     \begin{displaymath} 
       \lambda x_1 \centerdot  \lambda  x_2 \centerdot  
       \dots \lambda x_n \centerdot \underline{E_1  E_2
-         E_3 \dots E_n} =  \lambda x_1 \centerdot  \lambda  x_2 \centerdot  
+        E_3 \dots E_n} =  \lambda x_1 \centerdot  \lambda  x_2 \centerdot  
       \dots \lambda x_n \centerdot (E_1 E_2 E_3 \dots E_n) 
     \end{displaymath} 
   \end{itemize} 
+\end{frame}
+
+\begin{frame} 
+  \frametitle{\CJKfamily{hei} $\lambda$表达式:子表达式}  
+  \begin{itemize} 
+  \item{\color{red}子表达式}：设E是一个$\lambda$表达式，那E的子表达式可以定义为 
+    \begin{itemize} 
+    \item $E \equiv x$, x就是E的子表达式 
+    \item $E \equiv E1 \; E2$，E1，E2就是E的子表达式 
+    \item $E \equiv \lambda x \centerdot E' $，$\lambda x
+      \centerdot E'$和$E'$的子表达式都是E的子表达式
+    \item $E \equiv (E')$ $E'$和$E'$的子表达式都是E的子表达式
+    \end{itemize} 
+  \item {\color{red}$SUB(E)$}表示E的所有子表达式
+  \end{itemize} 
+\end{frame} 
+
+\subsection{ \CJKfamily{hei} 自由变量}
+
+\begin{frame} 
+  \frametitle{\CJKfamily{hei} 变量：作用域}  
+  \begin{itemize} 
+  \item 变量的作用域 
+    \begin{itemize} 
+    \item $ \lambda x \centerdot E$中的变量x是被绑定的，他的作用域是E中去掉所有形如 $ \lambda x \centerdot E'$子表达式的表达式部分
+    \item $ \lambda x \centerdot E$中的$ \lambda x \centerdot$可以看作变量的$x$的{\color{red}定义点}，在E中x的作用域出现的x是变量x的{\color{red}使用点} 
+    \end{itemize} 
+  \item 例子 
+    \begin{itemize} 
+    \item $\lambda$表达式：$y (\lambda {\color{cyan}x}
+      {\color{magenta}y} \centerdot {\color{magenta}\underline{ 
+          {\color{cyan}\underline{{\color{black}{y}}}} {\color{black}(\lambda}
+          {\color{blue}x} {\color{black}\centerdot} 
+          {\color{blue}\underline{{\color{black}{xy}}}}}}))
+      (z (\lambda {\color{green}x} \centerdot
+      {\color{green}\underline{{\color{black}{xx}}}})) $ 
+    \item {\color{cyan}x}的作用域是y 
+    \item {\color{magenta}y}的作用域是$y(\lambda x \centerdot xy)$
+    \item {\color{blue}x}的作用域是$xy$ 
+    \item {\color{green}x}的作用域是$xx$
+    \end{itemize}
+  \end{itemize} 
+\end{frame}
+
+\begin{frame} 
+  \frametitle{\CJKfamily{hei} 变量：自由出现}  
+  \begin{itemize}
+  \item $\lambda$表达式中相同的变量名，可以出现在不同位置，他们的含义可能不同
+  \item 自由出现：$\lambda$表达式E中的变量名x的一次出现成为自由出现，如果E中任何一个$\lambda x \centerdot E'$的子表达式不包含该出现 
+  \item 约束出现：$\lambda$表达式E中的变量名x的一次出现成为约束出现，如果E中存在一个$\lambda x \centerdot E'$的子表达式包含该出现 
+  \item ${\color{red}y}(\lambda x {\color{blue}y} \centerdot y (\lambda x \centerdot {\color{green}x}y))
+    ({\color{magenta}z} (\lambda x \centerdot {\color{cyan}x}x))$ 
+    \begin{itemize} 
+    \item {\color{red}y} 自由出现
+    \item {\color{blue}y} 约束出现 
+    \item {\color{green}x} 自由出现 
+    \item {\color{magenta}x} 自由出现 
+    \item {\color{cyan}x} 约束出现 
+    \end{itemize} 
+  \end{itemize}  
+\end{frame}
+
+\begin{frame}
+  \frametitle{\CJKfamily{hei} 自由变量：定义} 
+  \newtheorem{fv}{自由变量} 
+  \begin{fv}
+    如果$\lambda$表达式E中至少包含一个变量x的自由出现，则称x
+    为E的{\color{red}自由变量}, $FV(E)$表示$\lambda$表达式E
+    的自由变量集合 \\ 
+如果$\lambda$表达式E不包含自由变量，即$FV(E) = \emptyset$，则称E为封闭型表达式\\ 
+如果$\lambda$表达式E包含自由变量，即$FV(E) \neq \emptyset$，则称E为开型表达式
+  \end{fv} 
+  \begin{itemize}
+  \item  
+    $E \equiv x , FV(E) = \{ x \}$
+  \item       
+    $E \equiv E1 \; E2,  FV(E) =  FV(E1) \cup FV(E2) $    
+  \item
+    $E \equiv \lambda x \centerdot E',  FV(E) =  FV(E')
+    -\{ x \}     $
+  \item
+    $E \equiv (E'), FV(E) =  FV(E') $
+  \end{itemize}
 \end{frame}
 
 \section{\CJKfamily{hei}致谢}
