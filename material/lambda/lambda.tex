@@ -180,8 +180,8 @@
     如果$\lambda$表达式E中至少包含一个变量x的自由出现，则称x
     为E的{\color{red}自由变量}, $FV(E)$表示$\lambda$表达式E
     的自由变量集合 \\ 
-如果$\lambda$表达式E不包含自由变量，即$FV(E) = \emptyset$，则称E为封闭型表达式\\ 
-如果$\lambda$表达式E包含自由变量，即$FV(E) \neq \emptyset$，则称E为开型表达式
+    如果$\lambda$表达式E不包含自由变量，即$FV(E) = \emptyset$，则称E为封闭型表达式\\ 
+    如果$\lambda$表达式E包含自由变量，即$FV(E) \neq \emptyset$，则称E为开型表达式
   \end{fv} 
   \begin{itemize}
   \item  
@@ -195,6 +195,89 @@
     $E \equiv (E'), FV(E) =  FV(E') $
   \end{itemize}
 \end{frame}
+
+\begin{frame}
+  \frametitle{\CJKfamily{hei} 自由变量：计算FV} 
+  \begin{eqnarray*}
+    E & = &y (\lambda xy \centerdot y ( \lambda x \centerdot
+            x y)) (z (\lambda x \centerdot xx))  \\ 
+    FV(E) & = &FV(y (\lambda xy \centerdot y ( \lambda x \centerdot
+                x y))) \cup FV((z (\lambda x \centerdot xx))) \\ 
+      & = & FV(y) \cup FV((\lambda xy \centerdot y ( \lambda x \centerdot
+            x y))) \cup FV(z) \cup FV((\lambda x \centerdot xx))
+    \\
+      & = & \{ y \} \cup (FV(y(\lambda x \centerdot  x y))
+            - \{ x y\}) \cup \{ z \} \cup (FV(xx) - \{ x
+            \}) \\ 
+      & = & \{ y \} \cup \underbrace{(\{ y \} \cup FV(\lambda x
+            \centerdot  x y) - \{x y\})}_{\emptyset} \cup
+            \{z\} \cup \emptyset \\ 
+      & = & \{y \; z\}  
+  \end{eqnarray*} 
+\end{frame}
+
+\subsection{\CJKfamily{hei}变量替换} 
+\begin{frame}
+  \frametitle{\CJKfamily{hei} 变量替换：定义} 
+  \newtheorem{subst}{替换} 
+  \begin{subst}
+    $E$和$E_0$是$\lambda$表达式，$x$是变量名 \\
+    {\color{red} 替换}$E[E_0/x]$表示把E中所有x的自由出现替换成$E_0$
+  \end{subst}
+  \begin{itemize}
+  \item 只有自由出现的变量可以被替换，而且{\color{red}替换不应该把变量的自由出现变成约束出现}
+  \item $E[E_0/x]$的计算规则 
+    \begin{itemize}
+    \item {S1:}  $ E \equiv x,  x[E_0/x]  = E_0 $
+    \item{S2:}   $ E \equiv y, x \neq y,   y[E_0/x]  = y  $
+    \item {S3:} $ E \equiv (E'),   (E')[E_0/x]  = E'[E_0/x]  $
+    \item {S4:} $ E \equiv E_1E_2,   E_1E_2[E_0/x]  =
+      (E_1[E_0/x])(E_2[E_0/x]) $
+    \item{S5:} $ E \equiv \lambda x \centerdot E',   
+      \lambda x \centerdot    E'[E_0/x]   =  \lambda x \centerdot E' $
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{\CJKfamily{hei} 变量替换：计算规则2} 
+  \begin{itemize}
+  \item  $E \equiv \lambda y \centerdot E', x \neq y$ 
+    \begin{itemize}
+    \item {S6:} $E_0$中没有y的自由出现，直接对$E'$进行替换，
+      $ y \not \in FV(E_0),   (\lambda y
+      \centerdot E') [E_0/x] = \lambda y \centerdot
+      (E'[E_0/x]) $
+    \item {S7:} $E'$中没有x的自由出现，则E'没有可替换，
+      $ x \not \in FV(E'),   (\lambda y \centerdot E')
+      [E_0/x] = \lambda y
+      \centerdot E' $
+    \item{S8:}  $E_0$中有y的自由出现，$E'$中有x的自由出现，则需要对$E_0$中的y进行改名，改变后的变量名z在$E_0$不存在自由出现，   
+      \begin{eqnarray*}
+        &y \in FV(E_0) \wedge x \in FV(E'), & \\   
+        & (\lambda y  \centerdot  E') [E_0/x] 
+          = \lambda z  (E'[z/y]  [E_0/x]),  
+                                            & z \not \in FV(E_0), z \neq y   
+      \end{eqnarray*} 
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{\CJKfamily{hei} 变量替换：例子} 
+\end{frame}
+
+\section{\CJKfamily{hei}$\lambda$演算的变换系统}
+\begin{frame}
+  \frametitle{\CJKfamily{hei}变换系统：简介} 
+\end{frame}
+
+\subsection{\CJKfamily{hei}$\alpha$变换}
+\subsection{\CJKfamily{hei}$\beta$变换}
+\subsection{\CJKfamily{hei}$\eta$变换}
+
+\section{\CJKfamily{hei}简单类型$\lambda$演算} 
+\section{\CJKfamily{hei}递归实现：Y不动子} 
 
 \section{\CJKfamily{hei}致谢}
 \begin{frame}
