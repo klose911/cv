@@ -37,17 +37,17 @@
 \begin{document}
 \begin{CJK}{UTF8}{song}
 \bibliographystyle{unsrt} 
-\title{\CJKfamily{hei} $\lambda$演算}
-\author{\CJKfamily{hei} 吴善良}
+\title{\CJKfamily{hei}$\lambda$演算}
+\author{\CJKfamily{hei}吴善良}
 %% \institute{\CJKfamily{hei} 易保网络技术有限公司}
 \date{\CJKfamily{hei} \today}
 
 \frame{\titlepage}
 \tableofcontents
-\section{\CJKfamily{hei} $\lambda$演算}
+\section{\CJKfamily{hei}$\lambda$演算}
 
 \begin{frame}
-  \frametitle{\CJKfamily{hei} $\lambda$演算介绍}
+  \frametitle{\CJKfamily{hei}$\lambda$演算介绍}
   \begin{itemize}
   \item $\lambda$演算可看做是一个简单的语义清楚的形式语言，用来解释复杂的程序设计语言或者计算模型
   \item $\lambda$演算通常包含两部分
@@ -58,10 +58,10 @@
   \end{itemize}
 \end{frame}
 
-\subsection{ \CJKfamily{hei} $\lambda$表达式}
+\subsection{ \CJKfamily{hei}$\lambda$表达式}
 
 \begin{frame}
-  \frametitle{\CJKfamily{hei} $\lambda$表达式:定义}
+  \frametitle{\CJKfamily{hei}$\lambda$表达式:定义}
   \newtheorem{LE}{$\lambda$表达式} 
   \begin{LE}
     $\lambda$表达式由变量名，抽象
@@ -80,7 +80,7 @@
 \end{frame}
 
 \begin{frame} 
-  \frametitle{\CJKfamily{hei} $\lambda$表达式：优先级规则} 
+  \frametitle{\CJKfamily{hei}$\lambda$表达式：优先级规则} 
   \begin{itemize}
   \item{E1 E2}： 函数调用, E1是函数名，E2是实参
     \begin{itemize} 
@@ -114,7 +114,7 @@
 \end{frame}
 
 \begin{frame} 
-  \frametitle{\CJKfamily{hei} $\lambda$表达式:子表达式}  
+  \frametitle{\CJKfamily{hei}$\lambda$表达式:子表达式}  
   \begin{itemize} 
   \item{\color{red}子表达式}：设E是一个$\lambda$表达式，那E的子表达式可以定义为 
     \begin{itemize} 
@@ -128,10 +128,10 @@
   \end{itemize} 
 \end{frame} 
 
-\subsection{ \CJKfamily{hei} 自由变量}
+\subsection{ \CJKfamily{hei}自由变量}
 
 \begin{frame} 
-  \frametitle{\CJKfamily{hei} 变量：作用域}  
+  \frametitle{\CJKfamily{hei}变量：作用域}  
   \begin{itemize} 
   \item 变量的作用域 
     \begin{itemize} 
@@ -156,12 +156,13 @@
 \end{frame}
 
 \begin{frame} 
-  \frametitle{\CJKfamily{hei} 变量：自由出现}  
+  \frametitle{\CJKfamily{hei}变量：自由出现}  
   \begin{itemize}
   \item $\lambda$表达式中相同的变量名，可以出现在不同位置，他们的含义可能不同
   \item 自由出现：$\lambda$表达式E中的变量名x的一次出现成为自由出现，如果E中任何一个$\lambda x \centerdot E'$的子表达式不包含该出现 
   \item 约束出现：$\lambda$表达式E中的变量名x的一次出现成为约束出现，如果E中存在一个$\lambda x \centerdot E'$的子表达式包含该出现 
-  \item ${\color{red}y}(\lambda x {\color{blue}y} \centerdot y (\lambda x \centerdot {\color{green}x}y))
+  \item ${\color{red}y}(\lambda x {\color{blue}y} \centerdot
+    y (\lambda x \centerdot {\color{green}x}y))
     ({\color{magenta}z} (\lambda x \centerdot {\color{cyan}x}x))$ 
     \begin{itemize} 
     \item {\color{red}y} 自由出现
@@ -174,7 +175,7 @@
 \end{frame}
 
 \begin{frame}
-  \frametitle{\CJKfamily{hei} 自由变量：定义} 
+  \frametitle{\CJKfamily{hei}自由变量：定义} 
   \newtheorem{fv}{自由变量} 
   \begin{fv}
     如果$\lambda$表达式E中至少包含一个变量x的自由出现，则称x
@@ -197,7 +198,7 @@
 \end{frame}
 
 \begin{frame}
-  \frametitle{\CJKfamily{hei} 自由变量：计算FV} 
+  \frametitle{\CJKfamily{hei}自由变量：计算FV} 
   \begin{eqnarray*}
     E & = &y (\lambda xy \centerdot y ( \lambda x \centerdot
             x y)) (z (\lambda x \centerdot xx))  \\ 
@@ -216,9 +217,9 @@
   \end{eqnarray*} 
 \end{frame}
 
-\subsection{\CJKfamily{hei}变量替换} 
+\subsection{\CJKfamily{hei}  变量替换} 
 \begin{frame}
-  \frametitle{\CJKfamily{hei} 变量替换：定义} 
+  \frametitle{\CJKfamily{hei}变量替换：定义} 
   \newtheorem{subst}{替换} 
   \begin{subst}
     $E$和$E_0$是$\lambda$表达式，$x$是变量名 \\
@@ -228,7 +229,7 @@
   \item 只有自由出现的变量可以被替换，而且{\color{red}替换不应该把变量的自由出现变成约束出现}
   \item $E[E_0/x]$的计算规则 
     \begin{itemize}
-    \item {S1:}  $ E \equiv x,  x[E_0/x]  = E_0 $
+    \item {S1:}  $ E \equiv x,  x[E_0/x]  = E_0 $ \label{S1}
     \item{S2:}   $ E \equiv y, x \neq y,   y[E_0/x]  = y  $
     \item {S3:} $ E \equiv (E'),   (E')[E_0/x]  = E'[E_0/x]  $
     \item {S4:} $ E \equiv E_1E_2,   E_1E_2[E_0/x]  =
@@ -240,7 +241,7 @@
 \end{frame}
 
 \begin{frame}
-  \frametitle{\CJKfamily{hei} 变量替换：计算规则2} 
+  \frametitle{\CJKfamily{hei}变量替换：计算规则2} 
   \begin{itemize}
   \item  $E \equiv \lambda y \centerdot E', x \neq y$ 
     \begin{itemize}
@@ -264,19 +265,52 @@
 \end{frame}
 
 \begin{frame}
-    \frametitle{\CJKfamily{hei} 变量替换：例子} 
+  \frametitle{\CJKfamily{hei}变量替换：例子}  
+  \begin{itemize}
+  \item {简单例子}    
+    \begin{eqnarray*}
+      x[xy/x] = & xy  & (S1) \\ 
+      y[M/x] = & y & (S2) \\ 
+      (\lambda x \centerdot  xy)[E/x] = & \lambda x \centerdot xy & (S3;S5) \\  
+      (\lambda x \centerdot  xz)[w/y] = & \lambda x \centerdot xz & (S3;S7) 
+    \end{eqnarray*} 
+  \item {复杂例子} 
+    \begin{eqnarray*}
+      & ({\color{blue}\underline{{\color{black}(\lambda x \centerdot xy)}}} \;  
+        {\color{red}\underline{{\color{black}(\lambda b \centerdot xy)}}}) 
+        [\lambda a \centerdot ab/y] & \\ 
+      = & {\color{blue}\underline{{\color{black}
+          (\lambda x \centerdot xy) [\lambda a \centerdot ab/y]}}} \;  
+          {\color{red}\underline{{\color{black}(\lambda b \centerdot xy) 
+          [\lambda a \centerdot ab/y]}}} & (S4)  \\  
+      = & {\color{blue}\underline{{\color{black}
+          (\lambda x \centerdot x(\lambda a \centerdot ab))}}} \;
+          {\color{red}\underline{{\color{black}(\lambda b \centerdot xy) 
+          [\lambda a \centerdot ab/y]}}} & (S6) \\  
+      = & (\lambda x \centerdot x(\lambda a \centerdot ab)) \; 
+          {\color{red}\underline{{\color{black}(\lambda z \centerdot xy) [z/b]}}}
+          [\lambda a \centerdot ab/y] & (S8) \\  
+      = & (\lambda x \centerdot x(\lambda a \centerdot ab)) \; 
+          {\color{red}\underline{{\color{black}
+          (\lambda z \centerdot xy) [\lambda a \centerdot ab/y]}}} & (S7) \\ 
+      = & (\lambda x \centerdot x(\lambda a \centerdot ab)) \; 
+          (\lambda z \centerdot x(\lambda a \centerdot ab)) & (S6) 
+    \end{eqnarray*}
+  \end{itemize}
+
+
 \end{frame}
 
-\section{\CJKfamily{hei}$\lambda$演算的变换系统}
+\section{\CJKfamily{hei}lambda演算的变换系统}
 \begin{frame}
   \frametitle{\CJKfamily{hei}变换系统：简介} 
 \end{frame}
 
-\subsection{\CJKfamily{hei}$\alpha$变换}
-\subsection{\CJKfamily{hei}$\beta$变换}
-\subsection{\CJKfamily{hei}$\eta$变换}
+\subsection{\CJKfamily{hei}alpha变换}
+\subsection{\CJKfamily{hei}beta变换}
+\subsection{\CJKfamily{hei}eta变换}
 
-\section{\CJKfamily{hei}简单类型$\lambda$演算} 
+\section{\CJKfamily{hei}简单类型的lambda演算} 
 \section{\CJKfamily{hei}递归实现：Y不动子} 
 
 \section{\CJKfamily{hei}致谢}
