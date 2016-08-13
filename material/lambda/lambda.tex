@@ -64,8 +64,7 @@
   \frametitle{\CJKfamily{hei}$\lambda$表达式:定义}
   \newtheorem{LE}{$\lambda$表达式} 
   \begin{LE}
-    $\lambda$表达式由变量名，抽象
-    符号$\lambda$ . ( )组成 
+    $\lambda$表达式由变量名，抽象符号$\lambda$  $\centerdot$  $($  $)$组成 
     \begin{eqnarray*}
       <\textrm{$\lambda$表达式}> & ::= & <\textrm{变量名}> \\
       <\textrm{$\lambda$表达式}> & ::= & (<\textrm{$\lambda$表达式}>\quad<\textrm{$\lambda$表达式}>) \\ 
@@ -177,9 +176,7 @@
   \frametitle{\CJKfamily{hei}自由变量：定义} 
   \newtheorem{fv}{自由变量} 
   \begin{fv}
-    如果$\lambda$表达式E中至少包含一个变量x的自由出现，则称x
-    为E的{\color{red}自由变量}, $FV(E)$表示$\lambda$表达式E
-    的自由变量集合 \\ 
+    如果$\lambda$表达式E中至少包含一个变量x的自由出现，则称x为E的{\color{red}自由变量}, $FV(E)$表示$\lambda$表达式E的自由变量集合 \\ 
     如果$\lambda$表达式E不包含自由变量，即$FV(E) = \emptyset$，则称E为封闭型表达式\\ 
     如果$\lambda$表达式E包含自由变量，即$FV(E) \neq \emptyset$，则称E为开型表达式
   \end{fv} 
@@ -240,7 +237,7 @@
 \end{frame}
 
 \begin{frame}
-  \frametitle{\CJKfamily{hei}变量替换：计算规则2} 
+  \frametitle{\CJKfamily{hei}变量替换：计算规则} 
   \begin{itemize}
   \item  $E \equiv \lambda y \centerdot E', x \neq y$ 
     \begin{itemize}
@@ -315,29 +312,52 @@
 
 \subsection{\CJKfamily{hei}$\alpha$变换}
 \begin{frame}
-    \frametitle{\CJKfamily{hei}$\alpha$变换：定义} 
+  \frametitle{\CJKfamily{hei}$\alpha$变换：定义} 
+  \newtheorem{alphaTrans}{$\alpha$变换} 
+  \begin{alphaTrans}
+    假设E是$\lambda$表达式，x，y是变量名，如果$y \not \in FV(\lambda x \centerdot E)$，则称下面变换为{\color{red}$\alpha$}变换 
+    \begin{displaymath}
+      \lambda x \centerdot E \stackrel{\alpha}{\longrightarrow} \lambda y \centerdot(E[y/x]) 
+    \end{displaymath}
+  \end{alphaTrans} 
+  \begin{itemize}
+  \item $\alpha$只是改变了$\lambda x \centerdot E$的形参名 
+  \item{条件}：{\color{red}新的形参不允许是函数体的自由变量}，否则会改变函数含义
+  \end{itemize}
 \end{frame} 
 
 \begin{frame}
-    \frametitle{\CJKfamily{hei}$\alpha$变换：例子} 
+  \frametitle{\CJKfamily{hei}$\alpha$变换：例子} 
+  \begin{itemize}
+  \item 合法的$\alpha$变换 
+    \begin{eqnarray*}
+      \lambda x \centerdot (zx) & \stackrel{\alpha}{\longrightarrow} & \lambda y \centerdot (zy) \\ 
+      \lambda x \centerdot ((\lambda y \centerdot yx) x) & \stackrel{\alpha}{\longrightarrow} & \lambda z  \centerdot ((\lambda y \centerdot yz) z) 
+    \end{eqnarray*}
+  \item 非法的$\alpha$变换
+    \begin{eqnarray*}      
+      \lambda x \centerdot (zy) & \stackrel{\alpha}{\longrightarrow} &  \lambda y \centerdot (zy) \\
+      \lambda x \centerdot (z (\lambda y \centerdot x))  & \stackrel{\alpha}{\longrightarrow} & \lambda y \centerdot (z (\lambda y \centerdot y)) 
+    \end{eqnarray*}
+  \end{itemize}
 \end{frame} 
 
 \subsection{\CJKfamily{hei}$\beta$归约}
 \begin{frame}
-    \frametitle{\CJKfamily{hei}$\beta$归约：定义} 
+  \frametitle{\CJKfamily{hei}$\beta$归约：定义} 
 \end{frame} 
 
 \begin{frame}
-    \frametitle{\CJKfamily{hei}$\beta$归约：例子} 
+  \frametitle{\CJKfamily{hei}$\beta$归约：例子} 
 \end{frame} 
 
 \subsection{\CJKfamily{hei}$\eta$变换}
 \begin{frame}
-    \frametitle{\CJKfamily{hei}$\eta$变换：定义} 
+  \frametitle{\CJKfamily{hei}$\eta$变换：定义} 
 \end{frame} 
 
 \begin{frame}
-    \frametitle{\CJKfamily{hei}$\eta$变换：例子} 
+  \frametitle{\CJKfamily{hei}$\eta$变换：例子} 
 \end{frame} 
 
 \subsection{\CJKfamily{hei}$\lambda$演算范式}
