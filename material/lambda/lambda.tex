@@ -66,16 +66,15 @@
   \begin{LE}
     $\lambda$表达式由变量名，抽象
     符号$\lambda$ . ( )组成 
-    \begin{eqnarray}
+    \begin{eqnarray*}
       <\textrm{$\lambda$表达式}> & ::= & <\textrm{变量名}> \\
-                                 & & \mid\quad <\textrm{$\lambda$表达式}>\quad<\textrm{$\lambda$表达式}> \\ 
-                                 & & \mid\quad \lambda<\textrm{变量名}>.<\textrm{$\lambda$表达式}> \\
-                                 & & \mid\quad (<\textrm{$\lambda$表达式}>)
-    \end{eqnarray} 
+      <\textrm{$\lambda$表达式}> & ::= & (<\textrm{$\lambda$表达式}>\quad<\textrm{$\lambda$表达式}>) \\ 
+      <\textrm{$\lambda$表达式}> & ::= & (\lambda<\textrm{变量名}>.<\textrm{$\lambda$表达式}>)  
+    \end{eqnarray*} 
   \end{LE}      
   \begin{itemize}
   \item 没有类型，没有常量 
-  \item 变量名不仅可以代表变量，还可以代表{\color{blue}函数}
+  \item 变量名不仅可以代表变量，还可以代表{\color{red}函数}
   \end{itemize}
 \end{frame}
 
@@ -297,20 +296,53 @@
           (\lambda z \centerdot x(\lambda a \centerdot ab)) & (S6) 
     \end{eqnarray*}
   \end{itemize}
-
-
 \end{frame}
 
-\section{\CJKfamily{hei}lambda演算的变换系统}
+\section{\CJKfamily{hei}$\lambda$演算的变换系统}
 \begin{frame}
   \frametitle{\CJKfamily{hei}变换系统：简介} 
+  \begin{itemize}
+  \item 变换系统给出了如何从一个$\lambda$表达式转换成和其等价的另一个$\lambda$表达式
+  \item 变换系统定义了$\lambda$演算的语义
+  \item 不同的$\lambda$演算系统有不同的变换规则
+    \begin{itemize}
+    \item $\alpha$变换：绑定的变量名称不重要
+    \item $\beta$归约：实际上定义了函数调用 
+    \item $\eta$变换：函数的外延等价性
+    \end{itemize}
+  \end{itemize}
 \end{frame}
 
-\subsection{\CJKfamily{hei}alpha变换}
-\subsection{\CJKfamily{hei}beta变换}
-\subsection{\CJKfamily{hei}eta变换}
+\subsection{\CJKfamily{hei}$\alpha$变换}
+\begin{frame}
+    \frametitle{\CJKfamily{hei}$\alpha$变换：定义} 
+\end{frame} 
 
-\section{\CJKfamily{hei}简单类型的lambda演算} 
+\begin{frame}
+    \frametitle{\CJKfamily{hei}$\alpha$变换：例子} 
+\end{frame} 
+
+\subsection{\CJKfamily{hei}$\beta$归约}
+\begin{frame}
+    \frametitle{\CJKfamily{hei}$\beta$归约：定义} 
+\end{frame} 
+
+\begin{frame}
+    \frametitle{\CJKfamily{hei}$\beta$归约：例子} 
+\end{frame} 
+
+\subsection{\CJKfamily{hei}$\eta$变换}
+\begin{frame}
+    \frametitle{\CJKfamily{hei}$\eta$变换：定义} 
+\end{frame} 
+
+\begin{frame}
+    \frametitle{\CJKfamily{hei}$\eta$变换：例子} 
+\end{frame} 
+
+\subsection{\CJKfamily{hei}$\lambda$演算范式}
+
+\section{\CJKfamily{hei}简单类型的$lambda$演算} 
 \section{\CJKfamily{hei}递归实现：Y不动子} 
 
 \section{\CJKfamily{hei}致谢}
