@@ -165,8 +165,8 @@
     \begin{itemize} 
     \item {\color{red}y} 自由出现
     \item {\color{blue}y} 约束出现 
-    \item {\color{green}x} 自由出现 
-    \item {\color{magenta}x} 自由出现 
+    \item {\color{green}x} 约束出现 
+    \item {\color{magenta}z} 自由出现 
     \item {\color{cyan}x} 约束出现 
     \end{itemize} 
   \end{itemize}  
@@ -295,7 +295,7 @@
   \end{itemize}
 \end{frame}
 
-\section{\CJKfamily{hei}$\lambda$演算的变换系统}
+\section{\CJKfamily{hei}变换系统}
 \begin{frame}
   \frametitle{\CJKfamily{hei}变换系统：简介} 
   \begin{itemize}
@@ -310,18 +310,18 @@
   \end{itemize}
 \end{frame}
 
-\subsection{\CJKfamily{hei}$\alpha$变换}
+\subsection{\CJKfamily{hei} $\alpha$变换}
 \begin{frame}
   \frametitle{\CJKfamily{hei}$\alpha$变换：定义} 
   \newtheorem{alphaTrans}{$\alpha$变换} 
   \begin{alphaTrans}
-    假设E是$\lambda$表达式，x，y是变量名，如果$y \not \in FV(\lambda x \centerdot E)$，则称下面变换为{\color{red}$\alpha$}变换 
+    设E是$\lambda$表达式，x，y是变量名，如果$y \not \in FV(\lambda x \centerdot E)$，则称下面变换为{\color{red}$\alpha$}变换 
     \begin{displaymath}
       \lambda x \centerdot E \stackrel{\alpha}{\longrightarrow} \lambda y \centerdot(E[y/x]) 
     \end{displaymath}
   \end{alphaTrans} 
   \begin{itemize}
-  \item $\alpha$只是改变了$\lambda x \centerdot E$的形参名 
+  \item $\alpha$变换只是改变了$\lambda x \centerdot E$的形参名 
   \item{条件}：{\color{red}新的形参不允许是函数体的自由变量}，否则会改变函数含义
   \end{itemize}
 \end{frame} 
@@ -342,28 +342,66 @@
   \end{itemize}
 \end{frame} 
 
-\subsection{\CJKfamily{hei}$\beta$归约}
+\subsection{\CJKfamily{hei} $\beta$归约}
 \begin{frame}
   \frametitle{\CJKfamily{hei}$\beta$归约：定义} 
+\newtheorem{betaRed}{$\beta$归约}
+\begin{betaRed}
+  设$(\lambda x \centerdot E)$和$E_0$是$\lambda$表达式，则称下面的变换为{\color{red}$\beta$归约}，  $(\lambda x \centerdot E)E_0$被称为$\beta$基
+  \begin{displaymath}
+    (\lambda x \centerdot E)E_0 \stackrel{\beta}{\longrightarrow} E[E_0/x] 
+  \end{displaymath} 
+\end{betaRed}
+  \begin{itemize}
+  \item $\beta$归约事实上定义了 {\color{red}函数调用}的语义 
+  \item $\beta$归约是最重要的一个变换
+  \end{itemize}
 \end{frame} 
 
 \begin{frame}
   \frametitle{\CJKfamily{hei}$\beta$归约：例子} 
+  \begin{itemize}
+  \item $(\lambda x \centerdot xy) x \stackrel{\beta}{\longrightarrow} xy$
+  \item $(\lambda x \centerdot xx) y \stackrel{\beta}{\longrightarrow} yy$
+  \item  
+  \begin{eqnarray*}
+    {\color{blue}\underline{{\color{black}(\lambda x \centerdot (\lambda y \centerdot (\lambda z \centerdot xyz)))A}}}BC & & \\
+                                & \stackrel{\beta}{\longrightarrow} & {\color{blue}\underline{{\color{black}(\lambda y \centerdot (\lambda z \centerdot Ayz))B}}}C \\
+  & \stackrel{\beta}{\longrightarrow} & {\color{blue}\underline{{\color{black}(\lambda z \centerdot ABz)C}}} \\ 
+  & \stackrel{\beta}{\longrightarrow} & ABC 
+  \end{eqnarray*} 
+  \end{itemize}
 \end{frame} 
 
-\subsection{\CJKfamily{hei}$\eta$变换}
+\subsection{\CJKfamily{hei} $\eta$变换}
 \begin{frame}
   \frametitle{\CJKfamily{hei}$\eta$变换：定义} 
+  \newtheorem{etaRed}{$\eta$变换} 
+  \begin{etaRed}
+    设$\lambda x \centerdot Mx$是一个$\lambda$表达式，且$x \not \in FV(M)$, 则称下面的变换是{\color{red}$\eta$变换}
+    \begin{displaymath}
+      (\lambda x \centerdot Mx) \stackrel{\eta}{\longrightarrow} M 
+    \end{displaymath} 
+  \end{etaRed}
+  \begin{itemize}
+  \item 函数的外延等价性：$\forall x, f(x) = h(x) \Longrightarrow f \equiv h$  
+  \item $\eta$变换不是$\lambda$演算系统必须的变换 
+  \item 例子 
+    \begin{itemize}
+    \item{合法变换：} $\lambda x \centerdot (\lambda y \centerdot yy) x \stackrel{\eta}{\longrightarrow}(\lambda y \centerdot yy)$ 
+    \item{非法变换：}  $\lambda x \centerdot (\lambda y \centerdot y{\color{red}x}) x \stackrel{\eta}{\nrightarrow}(\lambda y \centerdot yx) $
+    \item 与$\beta$变换结合
+      \begin{displaymath}
+        \forall y, x \not \in FV(M), (\lambda x \centerdot Mx)y \stackrel{\beta}{\longrightarrow} My
+      \end{displaymath}
+    \end{itemize}
+  \end{itemize}
 \end{frame} 
 
-\begin{frame}
-  \frametitle{\CJKfamily{hei}$\eta$变换：例子} 
-\end{frame} 
+\subsection{\CJKfamily{hei} 范式}
 
-\subsection{\CJKfamily{hei}$\lambda$演算范式}
-
-\section{\CJKfamily{hei}简单类型的$lambda$演算} 
-\section{\CJKfamily{hei}递归实现：Y不动子} 
+\section{\CJKfamily{hei}简单类型} 
+\section{\CJKfamily{hei}递归实现} 
 
 \section{\CJKfamily{hei}致谢}
 \begin{frame}
