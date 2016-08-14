@@ -44,7 +44,7 @@
 
 \frame{\titlepage}
 \tableofcontents
-\section{\CJKfamily{hei}$\lambda$演算}
+\section{\CJKfamily{hei}$\lambda$表达式}
 
 \begin{frame}
   \frametitle{\CJKfamily{hei}$\lambda$演算介绍}
@@ -178,19 +178,20 @@
   \begin{fv}
     如果$\lambda$表达式E中至少包含一个变量x的自由出现，则称x为E的{\color{red}自由变量}, $FV(E)$表示$\lambda$表达式E的自由变量集合 \\ 
     如果$\lambda$表达式E不包含自由变量，即$FV(E) = \emptyset$，则称E为封闭型表达式\\ 
-    如果$\lambda$表达式E包含自由变量，即$FV(E) \neq \emptyset$，则称E为开型表达式
+    如果$\lambda$表达式E包含自由变量，即$FV(E) \neq \emptyset$，则称E为开型表达式 \\ 
+    FV计算规则： 
+    \begin{itemize} 
+    \item  
+      $E \equiv x , FV(E) = \{ x \}$
+    \item       
+      $E \equiv E1 \; E2,  FV(E) =  FV(E1) \cup FV(E2) $    
+    \item
+      $E \equiv \lambda x \centerdot E',  FV(E) =  FV(E')
+      -\{ x \}     $
+    \item
+      $E \equiv (E'), FV(E) =  FV(E') $
+    \end{itemize}
   \end{fv} 
-  \begin{itemize}
-  \item  
-    $E \equiv x , FV(E) = \{ x \}$
-  \item       
-    $E \equiv E1 \; E2,  FV(E) =  FV(E1) \cup FV(E2) $    
-  \item
-    $E \equiv \lambda x \centerdot E',  FV(E) =  FV(E')
-    -\{ x \}     $
-  \item
-    $E \equiv (E'), FV(E) =  FV(E') $
-  \end{itemize}
 \end{frame}
 
 \begin{frame}
@@ -342,34 +343,34 @@
   \end{itemize}
 \end{frame} 
 
-\subsection{\CJKfamily{hei} $\beta$归约}
+\subsection{\CJKfamily{hei} $\beta$变换}
 \begin{frame}
-  \frametitle{\CJKfamily{hei}$\beta$归约：定义} 
-\newtheorem{betaRed}{$\beta$归约}
-\begin{betaRed}
-  设$(\lambda x \centerdot E)$和$E_0$是$\lambda$表达式，则称下面的变换为{\color{red}$\beta$归约}，  $(\lambda x \centerdot E)E_0$被称为$\beta$基
-  \begin{displaymath}
-    (\lambda x \centerdot E)E_0 \stackrel{\beta}{\longrightarrow} E[E_0/x] 
-  \end{displaymath} 
-\end{betaRed}
+  \frametitle{\CJKfamily{hei}$\beta$变换：定义} 
+  \newtheorem{betaRed}{$\beta$变换}
+  \begin{betaRed}
+    设$(\lambda x \centerdot E)$和$E_0$是$\lambda$表达式，则称下面的变换为{\color{red}$\beta$变换}
+    \begin{displaymath}
+      (\lambda x \centerdot E)E_0 \stackrel{\beta}{\longrightarrow} E[E_0/x] 
+    \end{displaymath} 
+  \end{betaRed}
   \begin{itemize}
-  \item $\beta$归约事实上定义了 {\color{red}函数调用}的语义 
-  \item $\beta$归约是最重要的一个变换
+  \item $\beta$变换事实上定义了{\color{red}函数调用}的语义 
+  \item $\beta$变换是最重要的一个变换
   \end{itemize}
 \end{frame} 
 
 \begin{frame}
-  \frametitle{\CJKfamily{hei}$\beta$归约：例子} 
+  \frametitle{\CJKfamily{hei}$\beta$变换：例子} 
   \begin{itemize}
   \item $(\lambda x \centerdot xy) x \stackrel{\beta}{\longrightarrow} xy$
   \item $(\lambda x \centerdot xx) y \stackrel{\beta}{\longrightarrow} yy$
   \item  
-  \begin{eqnarray*}
-    {\color{blue}\underline{{\color{black}(\lambda x \centerdot (\lambda y \centerdot (\lambda z \centerdot xyz)))A}}}BC & & \\
-                                & \stackrel{\beta}{\longrightarrow} & {\color{blue}\underline{{\color{black}(\lambda y \centerdot (\lambda z \centerdot Ayz))B}}}C \\
-  & \stackrel{\beta}{\longrightarrow} & {\color{blue}\underline{{\color{black}(\lambda z \centerdot ABz)C}}} \\ 
-  & \stackrel{\beta}{\longrightarrow} & ABC 
-  \end{eqnarray*} 
+    \begin{eqnarray*}
+      {\color{blue}\underline{{\color{black}(\lambda x \centerdot (\lambda y \centerdot (\lambda z \centerdot xyz)))A}}}BC & & \\
+                                                                                                                           & \stackrel{\beta}{\longrightarrow} & {\color{blue}\underline{{\color{black}(\lambda y \centerdot (\lambda z \centerdot Ayz))B}}}C \\
+                                                                                                                           & \stackrel{\beta}{\longrightarrow} & {\color{blue}\underline{{\color{black}(\lambda z \centerdot ABz)C}}} \\ 
+                                                                                                                           & \stackrel{\beta}{\longrightarrow} & ABC 
+    \end{eqnarray*} 
   \end{itemize}
 \end{frame} 
 
@@ -398,7 +399,89 @@
   \end{itemize}
 \end{frame} 
 
-\subsection{\CJKfamily{hei} 范式}
+\subsection{\CJKfamily{hei} 归约和范式}
+\begin{frame}
+  \frametitle{\CJKfamily{hei}归约：定义} 
+  \newtheorem{reduction}{归约} 
+  \begin{reduction} 
+    \begin{itemize}
+    \item $(\lambda x \centerdot E)E_0$被称为$\beta$基
+    \item $(\lambda x \centerdot Mx)$被称为$\eta$基
+    \item $\beta$基和$\eta$基被统称为归约基 
+    \end{itemize} 
+    对表达式中某一归约基实行某种变换被称为{\color{red}归约}
+  \end{reduction} 
+  \begin{itemize}
+  \item 表达式可以同时有多个归约基 
+  \item 归约过程不唯一
+  \item {\color{red}不同的归约过程得到的结果不一定相同}
+  \end{itemize}
+\end{frame} 
+
+\begin{frame}
+  \frametitle{\CJKfamily{hei}归约：不同的归约过程得到相同的结果} 
+  \label{parad}
+  \begin{eqnarray*}
+    (\lambda y \centerdot y({\color{blue}\underline{(\lambda a \centerdot xa) (\lambda a \centerdot a))}})\;(\lambda b \centerdot b) & \stackrel{\beta}{\longrightarrow} & {\color{red}\underline{(\lambda y \centerdot y{\color{blue}(x (\lambda a \centerdot a)})) \; (\lambda b \centerdot b)}}   \\ 
+                                                                                                                                     &  \stackrel{\beta}{\longrightarrow} & {\color{cyan}\underline{{\color{red}(\lambda b \centerdot b)}\;(x (\lambda a \centerdot a))}} \\
+                                                                                                                                     & \stackrel{\beta}{\longrightarrow} & {\color{cyan}x(\lambda a \centerdot a)} \\
+    {\color{blue}\underline{(\lambda y \centerdot y((\lambda a \centerdot xa) (\lambda a \centerdot a)))\;(\lambda b \centerdot b)}} & \stackrel{\beta}{\longrightarrow} & {\color{red}\underline{{\color{blue}(\lambda b \centerdot b)}((\lambda a \centerdot xa) (\lambda a \centerdot a))}}   \\ 
+                                                                                                                                     &  \stackrel{\beta}{\longrightarrow} & {\color{cyan}\underline{{\color{red}(\lambda a \centerdot xa) (\lambda a \centerdot a)}}} \\
+                                                                                                                                     & \stackrel{\beta}{\longrightarrow} & {\color{cyan}x(\lambda a \centerdot a)} \\
+    (\lambda y \centerdot y({\color{blue}\underline{(\lambda a \centerdot xa)}} (\lambda a \centerdot a)))\;(\lambda b \centerdot b) &   \stackrel{\eta}{\longrightarrow} & {\color{red}\underline{(\lambda y \centerdot y ({\color{blue}x} (\lambda a \centerdot a))) (\lambda b \centerdot b)}}  \\   
+                                                                                                                                     &  \stackrel{\beta}{\longrightarrow} & {\color{cyan}\underline{{\color{red}(\lambda b \centerdot b)}\;(x (\lambda a \centerdot a))}} \\
+                                                                                                                                     & \stackrel{\beta}{\longrightarrow} & {\color{cyan}x(\lambda a \centerdot a)}
+  \end{eqnarray*}
+\end{frame}
+
+\begin{frame}
+  \frametitle{\CJKfamily{hei}归约：不同的归约过程得到不同的结果} 
+  \label{ambig}
+  \begin{itemize}
+  \item 归约过程1 
+    \begin{eqnarray*}
+      {\color{red}\underline{(\lambda x \centerdot y) ((\lambda x \centerdot xx) (\lambda x \centerdot xx))}}  &  \stackrel{\beta}{\longrightarrow} & y[((\lambda x \centerdot xx) (\lambda x \centerdot xx))/x] \\
+                                                                                                               &   \stackrel{\beta}{\longrightarrow} & y 
+    \end{eqnarray*} 
+  \item 归约过程2 
+    \begin{eqnarray*}
+      (\lambda x \centerdot y) ({\color{red}\underline{(\lambda x \centerdot xx) (\lambda x \centerdot xx)}}) &  \stackrel{\beta}{\longrightarrow} & (\lambda x \centerdot y) ({\color{red}\underline{(\lambda x \centerdot xx) (\lambda x \centerdot xx)}})  \\ 
+                                                                                                              &  \stackrel{\beta}{\longrightarrow} & (\lambda x \centerdot y) ({\color{red}\underline{(\lambda x \centerdot xx) (\lambda x \centerdot xx)}}) \\  
+                                                                                                              & & \cdots
+    \end{eqnarray*} 
+  \end{itemize}  
+\end{frame}
+
+\begin{frame}
+  \frametitle{\CJKfamily{hei}范式：定义} 
+  \newtheorem{Paradigm}{范式} 
+  \begin{Paradigm}
+    如果E是一个$\lambda$表达式，且E不包含任何归约基，这样的表达式被称为{\color{red}范式} \\ 
+    如果一个表达式经过有限次归约能成为范式，则称该表达式有范式 \\ 
+    最左归约：按归约基的$\lambda$符号出现顺序，每次归约最左边的归约基 
+    \begin{itemize}
+    \item $X \Rightarrow Y$：经过有限次($\alpha$, $\beta$, $\eta$)变换，X归约成Y
+    \item $X \Rightarrow^\gamma Y$：经过有限次($\beta$, $\eta$)变换，X归约成Y
+    \item $X \Rightarrow^\alpha Y$：经过有限次$\alpha$变换，X归约成Y
+    \end{itemize}
+  \end{Paradigm} 
+\end{frame} 
+
+\begin{frame}
+  \frametitle{\CJKfamily{hei}范式：性质} 
+  \newtheorem{Parad_uniq}{范式的唯一性} 
+  \begin{Parad_uniq}
+    如果有范式，则在$\alpha$变换下一定唯一 
+  \end{Parad_uniq}
+  \newtheorem{Parad_exist}{范式的存在性} 
+  \begin{Parad_exist}
+    如果有范式，则最左归约法一定能归约出范式 
+  \end{Parad_exist}
+  \begin{itemize}
+  \item 范式是$\lambda$表达式具有相同解释的最简表达形式 
+  \item $\lambda$表达式不一定有范式 例子见第\pageref{ambig}页
+  \end{itemize}
+\end{frame} 
 
 \section{\CJKfamily{hei}简单类型} 
 \section{\CJKfamily{hei}递归实现} 
