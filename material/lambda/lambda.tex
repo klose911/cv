@@ -316,7 +316,7 @@
   \frametitle{\CJKfamily{hei}$\alpha$变换：定义} 
   \newtheorem{alphaTrans}{$\alpha$变换} 
   \begin{alphaTrans}
-    设E是$\lambda$表达式，x，y是变量名，如果$y \not \in FV(\lambda x \centerdot E)$，则称下面变换为{\color{red}$\alpha$}变换 
+    设E是$\lambda$表达式，x，y是变量名，如果$y \not \in FV(\lambda x \centerdot E)$，则称下面变换为{\color{red}$\alpha$变换} 
     \begin{displaymath}
       \lambda x \centerdot E \stackrel{\alpha}{\longrightarrow} \lambda y \centerdot(E[y/x]) 
     \end{displaymath}
@@ -390,7 +390,7 @@
   \item 例子 
     \begin{itemize}
     \item{合法变换：} $\lambda x \centerdot (\lambda y \centerdot yy) x \stackrel{\eta}{\longrightarrow}(\lambda y \centerdot yy)$ 
-    \item{非法变换：}  $\lambda x \centerdot (\lambda y \centerdot y{\color{red}x}) x \stackrel{\eta}{\nrightarrow}(\lambda y \centerdot yx) $
+    \item{非法变换：}  $\lambda x \centerdot (\lambda y \centerdot y{\color{red}x}) x {\color{red}\stackrel{\eta}{\nrightarrow}} (\lambda y \centerdot yx) $
     \item 与$\beta$变换结合
       \begin{displaymath}
         \forall y, x \not \in FV(M), (\lambda x \centerdot Mx)y \stackrel{\beta}{\longrightarrow} My
@@ -483,7 +483,70 @@
   \end{itemize}
 \end{frame} 
 
-\section{\CJKfamily{hei}简单类型} 
+\section{\CJKfamily{hei}简单类型}
+
+\subsection{\CJKfamily{hei}邱奇数}
+\begin{frame}
+  \frametitle{\CJKfamily{hei}邱奇数：定义}
+  \newtheorem{churchNo}{邱奇数} 
+  \begin{churchNo}
+    \begin{eqnarray*}
+      0 & := & \lambda f \centerdot \lambda x \centerdot x \\ 
+      1 & := & \lambda f \centerdot \lambda x \centerdot f \; x \\ 
+      2 & := & \lambda f \centerdot \lambda x \centerdot f \; (f \;x) \\ 
+      3 & := & \lambda f \centerdot \lambda x \centerdot \underbrace{f \; (f \; (f}_3 \;x))x \\ 
+        & \dots &  
+    \end{eqnarray*} 
+    邱奇数是一个高阶函数，它的参数是一个单参数的函数f，返回值也是一个单参数的函数，　\\
+    自然数０是一个恒等函数， \\
+    自然数ｎ是以函数ｆ作为参数并以f的n次复合调用的函数作为返回值的函数
+  \end{churchNo}
+\end{frame} 
+
+\begin{frame}
+  \frametitle{\CJKfamily{hei}邱奇数：运算}　　
+  \begin{itemize}
+  \item后继函数：假设$n$一个邱奇数，SUCC函数进行$\beta$归约等价于$n + 1$的邱奇数定义
+    \begin{equation*}
+      SUCC := \lambda n \centerdot \lambda f \centerdot \lambda x \centerdot f \; (n \; f \; x) 
+    \end{equation*}
+  \item加法函数：
+    \begin{eqnarray*}
+      PLUS & := & \lambda m \centerdot \lambda n \centerdot \lambda f \centerdot \lambda x \centerdot (m \; f \;(n \;f \; x)) \\ 
+      PLUS & := & \lambda m \centerdot \lambda n \centerdot (m \; SUCC) \; n  
+    \end{eqnarray*}
+  \item乘法函数：　
+    \begin{eqnarray*}
+      MULT & := & \lambda m \centerdot \lambda n \centerdot \lambda f \centerdot m \; (n \; f) \\ 
+      MULT & := & \lambda m \centerdot \lambda n \centerdot m \; (PLUS \; n \;0)  
+    \end{eqnarray*}
+  % \item 减法，除法等更复杂定义这里不做介绍
+  \end{itemize}　
+\end{frame}
+
+\subsection{\CJKfamily{hei}逻辑和谓词}
+\begin{frame}
+\frametitle{\CJKfamily{hei}逻辑运算：定义}　
+\newtheorem{boolV}{布尔值}
+\begin{boolV}
+  \begin{eqnarray*}
+    TRUE  & := & \lambda x \lambda y \centerdot x \\
+    FALSE & := & \lambda x \lambda y \centerdot y \quad \textrm{{\color{red}FALSE等价于邱奇数０的定义}}
+  \end{eqnarray*} 
+\end{boolV}
+\newtheorem{logicO}{逻辑运算} 
+\begin{logicO}
+  \begin{eqnarray*}
+    AND & := & \lambda p \centerdot \lambda q \centerdot (p \; q \; p) \\
+    OR & := & \lambda p \lambda q \centerdot (p \; p \; q) \\
+    NOT & := & \lambda p \centerdot (p \; FALSE \; TRUE) \\
+    IFTHENELSE & := & \lambda p \centerdot \lambda a \centerdot \lambda b \centerdot (p \; a \; b)
+  \end{eqnarray*}
+\end{logicO}
+\end{frame}
+
+\subsection{\CJKfamily{hei}有序对}
+
 \section{\CJKfamily{hei}递归实现} 
 
 \section{\CJKfamily{hei}致谢}
