@@ -545,7 +545,57 @@
 \end{logicO}
 \end{frame}
 
+\begin{frame}
+  \frametitle{逻辑运算：例子}　
+  \begin{eqnarray*}
+ & {\color{red}AND \; TRUE \; TRUE} & \\ 
+   \equiv & (\lambda p \centerdot \lambda q \centerdot p \; q \; p) \; TRUE \; TRUE & \stackrel{\beta}{\longrightarrow} TRUE \; TRUE \; TRUE \\ 
+   \equiv & (\lambda x \centerdot \lambda y \centerdot x) \; TRUE \; TRUE & \stackrel{\beta}{\longrightarrow} {\color{red}TRUE} \\ 
+     & {\color{red}AND \; TRUE \; FALSE} & \\ 
+   \equiv & (\lambda p \centerdot \lambda q \centerdot p \; q \; p) \; TRUE \; FALSE & \stackrel{\beta}{\longrightarrow} TRUE \; FALSE \; TRUE \\ 
+   \equiv & (\lambda x \centerdot \lambda y \centerdot x) \; FALSE \; TRUE & \stackrel{\beta}{\longrightarrow} {\color{red}FALSE} \\ 
+     & {\color{red}AND \; FALSE \; TRUE} & \\ 
+   \equiv & (\lambda p \centerdot \lambda q \centerdot p \; q \; p) \; FALSE \; TRUE & \stackrel{\beta}{\longrightarrow} FALSE \; TRUE \; FALSE \\ 
+   \equiv & (\lambda x \centerdot \lambda y \centerdot y) \; TRUE \; FALSE & \stackrel{\beta}{\longrightarrow} {\color{red}FALSE} \\ 
+\dots \dots  \\ 
+     & {\color{red}AND \; FALSE \; FALSE} & \stackrel{\beta}{\longrightarrow} {\color{red}FALSE} \\ 
+  \end{eqnarray*}
+\end{frame}
+
+\begin{frame}
+  \frametitle{\CJKfamily{hei}谓词：定义}　
+\newtheorem{predF}{谓词} 
+\begin{predF}
+  谓词是返回布尔值的函数 
+  \begin{itemize}
+  \item ALWAYSFALSE：永远返回FALSE 
+    \begin{displaymath}
+      ALWAYSFALSE := \lambda x \centerdot FALSE 
+    \end{displaymath}
+  \item ISZERO：当且仅当其参数为邱奇数０时返回TRUE，否则返回FALSE
+    \begin{displaymath}
+       ISZERO := \lambda n \centerdot n \; ALWAYSFALSE \; TRUE
+    \end{displaymath}
+  \end{itemize}
+\end{predF}
+\end{frame}
+
 \subsection{\CJKfamily{hei}有序对}
+\begin{frame}
+  \frametitle{\CJKfamily{hei}有序对：定义} 
+\newtheorem{pairs}{有序对(PAIRS)}
+\begin{pairs}
+  有序对可以用$TRUE$和$FALSE$来定义　
+  \begin{eqnarray*}
+    CONS & := & \lambda x \centerdot \lambda y \centerdot \lambda f \centerdot f \; x \; y \\ 
+    CAR & := & \lambda p \centerdot p \; TRUE \\
+    CDR & := & \lambda p \centerdot p \; FALSE \\ 
+    NIL & := & \lambda x \centerdot TRUE \\
+    NULL? & := & \lambda p \centerdot p(\lambda x \centerdot \lambda y \centerdot FALSE) \\
+  \end{eqnarray*}
+\end{pairs}
+
+\end{frame}
 
 \section{\CJKfamily{hei}递归实现} 
 
