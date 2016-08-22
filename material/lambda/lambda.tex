@@ -589,7 +589,7 @@
       PRED := \lambda n \centerdot \; n \; (\lambda g \centerdot \lambda k \centerdot \; ISZERO \; (g \; 1) \; k \; (PLUS \; (g \; k) \; 1)) \; (\lambda v \centerdot \; 0) \; 0
     \end{displaymath} 
     \begin{itemize}
-    \item 根据数学归纳法可以证明当$n > 0$的情况下$n \; (\lambda g \centerdot \lambda k \centerdot \; ISZERO \; (g \; 1) \; k \; (PLUS \; (g \; k) \; 1)) \; (\lambda v \centerdot \; 0)$就是加$n-1$次邱奇数1的函数
+    \item 根据数学归纳法可以证明当邱奇数$n > 0$的情况下$n \; (\lambda g \centerdot \lambda k \centerdot \; ISZERO \; (g \; 1) \; k \; (PLUS \; (g \; k) \; 1)) \; (\lambda v \centerdot \; 0)$就是加$n-1$次邱奇数1的函数
     \end{itemize} 
   \item SUB：减法函数，根据PRED可以定义 
   \item EQ：比较相等函数，根据SUB可以定义
@@ -599,7 +599,7 @@
     \end{eqnarray*}
   \end{itemize}
 \end{frame}
-h
+
 \subsection{\CJKfamily{hei}有序对}
 \begin{frame}
   \frametitle{\CJKfamily{hei}有序对：定义} 
@@ -620,9 +620,22 @@ h
   \end{itemize}
 \end{frame}
 
-\subsection{\CJKfamily{hei}$\lambda$计算模型} 
+\section{\CJKfamily{hei}实现递归} 
 \begin{frame}
-  \frametitle{\CJKfamily{hei}$\lambda$计算模型：意义} 
+  \frametitle{\CJKfamily{hei}实现递归：Y不动子}
+\end{frame}
+
+\begin{frame}
+  \frametitle{\CJKfamily{hei}实现递归：例子}
+\end{frame}
+
+\section{\CJKfamily{hei}$\lambda$计算模型}　
+\begin{frame}
+  \frametitle{\CJKfamily{hei}$\lambda$计算模型：简介}
+\end{frame}
+
+\begin{frame}
+  \frametitle{\CJKfamily{hei}$\lambda$计算模型：例子} 
   \begin{itemize}
   \item quote，atom，cons，car，cdr，eq，cond是LISP的7个原始操作符 
     \begin{itemize}
@@ -634,10 +647,6 @@ h
   \end{itemize}
 \end{frame}
 
-\section{\CJKfamily{hei}递归实现} 
-\begin{frame}
-  \frametitle{\CJKfamily{hei}递归实现：Y不动子}
-\end{frame}
 \section{\CJKfamily{hei}致谢}
 \begin{frame}
   \begin{Huge}
@@ -646,6 +655,6 @@ h
     \end{center}
   \end{Huge}
 \end{frame}
-\bibliography{lambda.bib} 
+\bibliography{lambda} 
 \end{CJK}
 \end{document}
