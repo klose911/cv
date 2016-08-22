@@ -17,7 +17,7 @@ lambda.ps: lambda.dvi
 
 lambda.dvi: ${SRC}
 	latex lambda.tex
-	# bibtex lambda.aux
+	bibtex lambda.aux
 	latex lambda.tex
 	latex lambda.tex
 

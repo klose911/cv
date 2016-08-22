@@ -488,7 +488,7 @@
 \subsection{\CJKfamily{hei}邱奇数}
 \begin{frame}
   \frametitle{\CJKfamily{hei}邱奇数：定义}
-  \newtheorem{churchNo}{邱奇数} 
+  \newtheorem{churchNo}{邱奇数（Church Number）} 
   \begin{churchNo}
     \begin{eqnarray*}
       0 & := & \lambda f \centerdot \lambda x \centerdot x \\ 
@@ -496,109 +496,148 @@
       2 & := & \lambda f \centerdot \lambda x \centerdot f \; (f \;x) \\ 
       3 & := & \lambda f \centerdot \lambda x \centerdot \underbrace{f \; (f \; (f}_3 \;x))x \\ 
         & \dots &  
-    \end{eqnarray*} 
-    邱奇数是一个高阶函数，它的参数是一个单参数的函数f，返回值也是一个单参数的函数，　\\
-    自然数０是一个恒等函数， \\
-    自然数ｎ是以函数ｆ作为参数并以f的n次复合调用的函数作为返回值的函数
+    \end{eqnarray*}  
   \end{churchNo}
+  \begin{itemize}
+  \item 邱奇数是一个高阶函数，它的参数是一个单参数的函数f，返回值也是一个单参数的函数
+  \item 邱奇数０是一个恒等函数
+  \item 邱奇数ｎ是以函数ｆ作为参数并以f的n次复合调用的函数作为返回值的函数
+  \end{itemize}
 \end{frame} 
 
 \begin{frame}
   \frametitle{\CJKfamily{hei}邱奇数：运算}　　
   \begin{itemize}
-  \item后继函数：假设$n$一个邱奇数，SUCC函数进行$\beta$归约等价于$n + 1$的邱奇数定义
+  \item SUCC：后继函数，假设$n$一个邱奇数，SUCC函数进行$\beta$归约等价于$n + 1$的邱奇数定义
     \begin{equation*}
       SUCC := \lambda n \centerdot \lambda f \centerdot \lambda x \centerdot f \; (n \; f \; x) 
     \end{equation*}
-  \item加法函数：
+  \item PLUS：加法函数
     \begin{eqnarray*}
       PLUS & := & \lambda m \centerdot \lambda n \centerdot \lambda f \centerdot \lambda x \centerdot (m \; f \;(n \;f \; x)) \\ 
       PLUS & := & \lambda m \centerdot \lambda n \centerdot (m \; SUCC) \; n  
     \end{eqnarray*}
-  \item乘法函数：　
+  \item MULT：乘法函数　
     \begin{eqnarray*}
       MULT & := & \lambda m \centerdot \lambda n \centerdot \lambda f \centerdot m \; (n \; f) \\ 
       MULT & := & \lambda m \centerdot \lambda n \centerdot m \; (PLUS \; n \;0)  
     \end{eqnarray*}
-  % \item 减法，除法等更复杂定义这里不做介绍
   \end{itemize}　
 \end{frame}
 
 \subsection{\CJKfamily{hei}逻辑和谓词}
 \begin{frame}
-\frametitle{\CJKfamily{hei}逻辑运算：定义}　
-\newtheorem{boolV}{布尔值}
-\begin{boolV}
-  \begin{eqnarray*}
-    TRUE  & := & \lambda x \lambda y \centerdot x \\
-    FALSE & := & \lambda x \lambda y \centerdot y \quad \textrm{{\color{red}FALSE等价于邱奇数０的定义}}
-  \end{eqnarray*} 
-\end{boolV}
-\newtheorem{logicO}{逻辑运算} 
-\begin{logicO}
-  \begin{eqnarray*}
-    AND & := & \lambda p \centerdot \lambda q \centerdot (p \; q \; p) \\
-    OR & := & \lambda p \lambda q \centerdot (p \; p \; q) \\
-    NOT & := & \lambda p \centerdot (p \; FALSE \; TRUE) \\
-    IFTHENELSE & := & \lambda p \centerdot \lambda a \centerdot \lambda b \centerdot (p \; a \; b)
-  \end{eqnarray*}
-\end{logicO}
+  \frametitle{\CJKfamily{hei}逻辑运算：定义}　
+  \newtheorem{boolV}{布尔值（Boolean）}
+  \begin{boolV}
+    \begin{eqnarray*}
+      TRUE  & := & \lambda x \centerdot \lambda y \centerdot x \\
+      FALSE & := & \lambda x \centerdot \lambda y \centerdot y 
+    \end{eqnarray*} 
+  \end{boolV}
+  \newtheorem{logicO}{逻辑运算（Logic）} 
+  \begin{logicO}
+    \begin{eqnarray*}
+      AND & := & \lambda p \centerdot \lambda q \centerdot (p \; q \; p) \\
+      OR & := & \lambda p \centerdot \lambda q \centerdot (p \; p \; q) \\
+      NOT & := & \lambda p \centerdot (p \; FALSE \; TRUE) \\
+      IFTHENELSE & := & \lambda p \centerdot \lambda a \centerdot \lambda b \centerdot (p \; a \; b)
+    \end{eqnarray*}
+  \end{logicO}
 \end{frame}
 
 \begin{frame}
   \frametitle{逻辑运算：例子}　
   \begin{eqnarray*}
- & {\color{red}AND \; TRUE \; TRUE} & \\ 
-   \equiv & (\lambda p \centerdot \lambda q \centerdot p \; q \; p) \; TRUE \; TRUE & \stackrel{\beta}{\longrightarrow} TRUE \; TRUE \; TRUE \\ 
-   \equiv & (\lambda x \centerdot \lambda y \centerdot x) \; TRUE \; TRUE & \stackrel{\beta}{\longrightarrow} {\color{red}TRUE} \\ 
-     & {\color{red}AND \; TRUE \; FALSE} & \\ 
-   \equiv & (\lambda p \centerdot \lambda q \centerdot p \; q \; p) \; TRUE \; FALSE & \stackrel{\beta}{\longrightarrow} TRUE \; FALSE \; TRUE \\ 
-   \equiv & (\lambda x \centerdot \lambda y \centerdot x) \; FALSE \; TRUE & \stackrel{\beta}{\longrightarrow} {\color{red}FALSE} \\ 
-     & {\color{red}AND \; FALSE \; TRUE} & \\ 
-   \equiv & (\lambda p \centerdot \lambda q \centerdot p \; q \; p) \; FALSE \; TRUE & \stackrel{\beta}{\longrightarrow} FALSE \; TRUE \; FALSE \\ 
-   \equiv & (\lambda x \centerdot \lambda y \centerdot y) \; TRUE \; FALSE & \stackrel{\beta}{\longrightarrow} {\color{red}FALSE} \\ 
-\dots \dots  \\ 
-     & {\color{red}AND \; FALSE \; FALSE} & \stackrel{\beta}{\longrightarrow} {\color{red}FALSE} \\ 
+    & {\color{red}AND \; TRUE \; TRUE} & \\ 
+    \equiv & (\lambda p \centerdot \lambda q \centerdot p \; q \; p) \; TRUE \; TRUE & \stackrel{\beta}{\longrightarrow} TRUE \; TRUE \; TRUE \\ 
+    \equiv & (\lambda x \centerdot \lambda y \centerdot x) \; TRUE \; TRUE & \stackrel{\beta}{\longrightarrow} {\color{red}TRUE} \\ 
+    & {\color{red}AND \; TRUE \; FALSE} & \\ 
+    \equiv & (\lambda p \centerdot \lambda q \centerdot p \; q \; p) \; TRUE \; FALSE & \stackrel{\beta}{\longrightarrow} TRUE \; FALSE \; TRUE \\ 
+    \equiv & (\lambda x \centerdot \lambda y \centerdot x) \; FALSE \; TRUE & \stackrel{\beta}{\longrightarrow} {\color{red}FALSE} \\ 
+    & {\color{red}AND \; FALSE \; TRUE} & \\ 
+    \equiv & (\lambda p \centerdot \lambda q \centerdot p \; q \; p) \; FALSE \; TRUE & \stackrel{\beta}{\longrightarrow} FALSE \; TRUE \; FALSE \\ 
+    \equiv & (\lambda x \centerdot \lambda y \centerdot y) \; TRUE \; FALSE & \stackrel{\beta}{\longrightarrow} {\color{red}FALSE} \\ 
+    \dots \dots  \\ 
+    & {\color{red}AND \; FALSE \; FALSE} & \stackrel{\beta}{\longrightarrow} {\color{red}FALSE} \\ 
   \end{eqnarray*}
 \end{frame}
 
 \begin{frame}
   \frametitle{\CJKfamily{hei}谓词：定义}　
-\newtheorem{predF}{谓词} 
-\begin{predF}
-  谓词是返回布尔值的函数 
+  \newtheorem{predF}{谓词（Predicate）} 
+  \begin{predF}
+    谓词是返回布尔值的函数 
+  \end{predF}
   \begin{itemize}
   \item ALWAYSFALSE：永远返回FALSE 
     \begin{displaymath}
       ALWAYSFALSE := \lambda x \centerdot FALSE 
     \end{displaymath}
-  \item ISZERO：当且仅当其参数为邱奇数０时返回TRUE，否则返回FALSE
+  \item ISZERO：当且仅当其参数为邱奇数０时返回TRUE，否则返回FALSE，\emph{\color{red}FALSE等价于邱奇数０的定义}
     \begin{displaymath}
-       ISZERO := \lambda n \centerdot n \; ALWAYSFALSE \; TRUE
+      ISZERO := \lambda n \centerdot n \; ALWAYSFALSE \; TRUE
     \end{displaymath}
   \end{itemize}
-\end{predF}
 \end{frame}
 
+\begin{frame}
+  \frametitle{\CJKfamily{hei}谓词：例子} 
+  \begin{itemize}
+  \item PRED：前驱元函数
+    \begin{displaymath}
+      PRED := \lambda n \centerdot \; n \; (\lambda g \centerdot \lambda k \centerdot \; ISZERO \; (g \; 1) \; k \; (PLUS \; (g \; k) \; 1)) \; (\lambda v \centerdot \; 0) \; 0
+    \end{displaymath} 
+    \begin{itemize}
+    \item 根据数学归纳法可以证明当$n > 0$的情况下$n \; (\lambda g \centerdot \lambda k \centerdot \; ISZERO \; (g \; 1) \; k \; (PLUS \; (g \; k) \; 1)) \; (\lambda v \centerdot \; 0)$就是加$n-1$次邱奇数1的函数
+    \end{itemize} 
+  \item SUB：减法函数，根据PRED可以定义 
+  \item EQ：比较相等函数，根据SUB可以定义
+    \begin{eqnarray*}
+      LEQ & :=  & \lambda m \centerdot \lambda n \centerdot \; ISZERO \; (SUB\;m\;n) \quad {\color{red}\textrm{less than or equal}} \\ 
+      EQ & := & \lambda m \centerdot \lambda n \; AND \; (LEQ \; m \; n) \; (LEQ \; n \; m) 
+    \end{eqnarray*}
+  \end{itemize}
+\end{frame}
+h
 \subsection{\CJKfamily{hei}有序对}
 \begin{frame}
   \frametitle{\CJKfamily{hei}有序对：定义} 
-\newtheorem{pairs}{有序对(PAIRS)}
-\begin{pairs}
-  有序对可以用$TRUE$和$FALSE$来定义　
-  \begin{eqnarray*}
-    CONS & := & \lambda x \centerdot \lambda y \centerdot \lambda f \centerdot f \; x \; y \\ 
-    CAR & := & \lambda p \centerdot p \; TRUE \\
-    CDR & := & \lambda p \centerdot p \; FALSE \\ 
-    NIL & := & \lambda x \centerdot TRUE \\
-    NULL? & := & \lambda p \centerdot p(\lambda x \centerdot \lambda y \centerdot FALSE) \\
-  \end{eqnarray*}
-\end{pairs}
+  \newtheorem{pairs}{有序对(Pairs)}
+  \begin{pairs}
+    有序对可以用$TRUE$和$FALSE$来定义　
+    \begin{eqnarray*}
+      CONS & := & \lambda x \centerdot \lambda y \centerdot \lambda f \centerdot f \; x \; y \\ 
+      CAR & := & \lambda p \centerdot p \; TRUE \\
+      CDR & := & \lambda p \centerdot p \; FALSE \\ 
+      NIL & := & \lambda x \centerdot TRUE \\
+      NULL? & := & \lambda p \centerdot p(\lambda x \centerdot \lambda y \centerdot FALSE) \\
+    \end{eqnarray*} 
+  \end{pairs}
+  \begin{itemize}
+  \item LIST：列表函数，可以被定义成空列表NIL，或者CONS一个表达式和一个列表 
+  \item ATOM?：判断变量是否原子类型函数，当某个变量的CDR是NIL的时候，可以认为这个变量是原子类型 
+  \end{itemize}
+\end{frame}
 
+\subsection{\CJKfamily{hei}$\lambda$计算模型} 
+\begin{frame}
+  \frametitle{\CJKfamily{hei}$\lambda$计算模型：意义} 
+  \begin{itemize}
+  \item quote，atom，cons，car，cdr，eq，cond是LISP的7个原始操作符 
+    \begin{itemize}
+    \item quote ： 引用函数，它的自变量不被求值, 而是作为整个表达式的值返回
+    \item cond： 条件函数，可以由IFTHENELSE定义
+    \item atom，cons，car，cdr，eq：已经被定义
+    \end{itemize}
+  \item 用这7个操作符可以写出最早版本的eval函数，这也就是最简单的{\color{red}解释器}\cite{RootsOfLisp}
+  \end{itemize}
 \end{frame}
 
 \section{\CJKfamily{hei}递归实现} 
-
+\begin{frame}
+  \frametitle{\CJKfamily{hei}递归实现：Y不动子}
+\end{frame}
 \section{\CJKfamily{hei}致谢}
 \begin{frame}
   \begin{Huge}
@@ -607,6 +646,6 @@
     \end{center}
   \end{Huge}
 \end{frame}
-%% \bibliography{axis.bib} 
+\bibliography{lambda.bib} 
 \end{CJK}
 \end{document}
