@@ -621,22 +621,65 @@
 \end{frame}
 
 \section{\CJKfamily{hei}实现递归} 
+\subsection{\CJKfamily{hei}Y不动子}
 \begin{frame}
-  \frametitle{\CJKfamily{hei}实现递归：Y不动子}
+  \frametitle{\CJKfamily{hei}实现递归：Y不动子} 
+  \begin{itemize}
+  \item 递归是用函数自身去定义函数 
+  \item $\lambda$演算的函数都是无名函数，表面看不支持递归，但是可以构造特殊的函数来实现递归
+    \newtheorem{YComb}{Y不动子} 
+    \begin{YComb}
+      \begin{eqnarray*}
+        Y & := & \lambda g \centerdot (\lambda x \centerdot g(x \;x)) \; (\lambda x \centerdot g(x \;x)) \\ 
+        YG & \equiv & (\lambda x \centerdot G(x \;x)) \;  (\lambda x \centerdot G(x \;x)) \\ 
+        YG & \equiv & G (\underbrace{(\lambda x \centerdot G(x \;x)) \;  (\lambda x \centerdot G(x \;x))}_{YG}) \\ 
+        YG & \equiv & G(YG) 
+      \end{eqnarray*} 
+      YG被称为G的一个不动点，Y被称为不动子
+    \end{YComb}
+  \item  {\color{red}任何递归函数都可以被看成是另一个函数的不动点}
+  \end{itemize}
 \end{frame}
 
 \begin{frame}
-  \frametitle{\CJKfamily{hei}实现递归：例子}
+  \frametitle{\CJKfamily{hei}实现递归：用Y不动子计算阶乘1} 
+  \begin{displaymath}
+    G  := \lambda r \centerdot \lambda n \centerdot (IF \; ISZERO(n) \; 1 \; (MULT \; n \; (r \; (SUB \; n \;1)))) 
+  \end{displaymath}
+  \begin{eqnarray*}
+    & (YG) \; 4  & \\
+    & =  &  (G \; (YG)) \; 4 \\  
+    & =  & (\underbrace{(\lambda r \centerdot \lambda n \centerdot  (IF \, ISZERO(n) \, 1 \, (MULT \, n \, (r \, (SUB \, n \,1)))))}_G \; YG) \; 4 \\
+    & =  & (\lambda n \centerdot (IF \; ISZERO(n) \; 1 \; (MULT \; n ((YG) \; (SUB \; n \; 1))))) \;4 \\
+    & =  & IF \; ISZERO(4) \; 1 \; {\color{red}\underline{(MULT \; 4 \; ((YG) \; (SUB \;4 \;1)))}} \\
+    & =  & MULT \; 4 \; ((YG) \;3)  \\ 
+    & \dots & \\ 
+    & = & MULT \; 4 \; (MULT \; 3 \; (MULT \; 2 \; (MULT \; 1 \; {\color{red}((YG) 0)})))   
+  \end{eqnarray*}
 \end{frame}
 
-\section{\CJKfamily{hei}$\lambda$计算模型}　
 \begin{frame}
-  \frametitle{\CJKfamily{hei}$\lambda$计算模型：简介}
+  \frametitle{\CJKfamily{hei}实现递归：用Y不动子计算阶乘2} 
+  \begin{eqnarray*} 
+    & {\color{red}(YG) \; 0} &    \\
+    & =  & (G \; (YG)) \; 0 \\  
+    & = & (\underbrace{(\lambda r \centerdot \lambda n \centerdot  (IF \, ISZERO(n) \, 1 (MULT \, n (r (SUB \, n \,1)))))}_G YG) \, 0 \\
+    & =  & (\lambda n \centerdot (IF \; ISZERO(n) \; 1 \; (MULT \; n ((YG) \; (SUB \; n \; 1))))) \;0 \\
+    & = & IF \; ISZERO(0) \; {\color{red}\underline{1}} \; (MULT \; 0 \; ((YG) \; (SUB \;0 \;1))) \\ 
+    & =  & {\color{red}1} \\
+    & (YG) \; 4 &  \\ 
+    & = &  MULT \; 4 \; (MULT \; 3 (MULT \; 2 \; (MULT \; 1 \; {\color{red}1}))) \\ 
+    & =  & {\color{red}24}
+  \end{eqnarray*} 
+  {\color{red}定义一个合适的函数G（使用一个额外的参数来描述递归的$\lambda$表达式）， 对这个函数G进行不动子求值就相当于调用递归}
 \end{frame}
+
+\section{\CJKfamily{hei}$\lambda$计算模型}
 
 \begin{frame}
   \frametitle{\CJKfamily{hei}$\lambda$计算模型：例子} 
   \begin{itemize}
+  \item $\lambda$演算可以描述复杂计算，计算能力等价于图灵计算模型 
   \item quote，atom，cons，car，cdr，eq，cond是LISP的7个原始操作符 
     \begin{itemize}
     \item quote ： 引用函数，它的自变量不被求值, 而是作为整个表达式的值返回
@@ -645,7 +688,43 @@
     \end{itemize}
   \item 用这7个操作符可以写出最早版本的eval函数，这也就是最简单的{\color{red}解释器}\cite{RootsOfLisp}
   \end{itemize}
+\end{frame} 
+
+\subsection{\CJKfamily{hei}$\lambda$计算模型扩充}
+\begin{frame}
+  \frametitle{\CJKfamily{hei}$\lambda$计算模型：扩充}
+  \begin{itemize}
+  \item $\lambda$演算实际使用很不方便 
+  \item $\lambda$计算模型扩充
+    \begin{itemize}
+    \item 扩充表达式
+      \begin{itemize}
+      \item 常数：TRUE, FALSE, 整数
+      \item 标准函数 
+      \item 条件表达式
+      \item let表达式
+      \end{itemize}
+    \item 扩充变换系统 
+    \item 扩充数据类型：INT，REAL，BOOLEAN
+    \end{itemize}
+  \end{itemize}
 \end{frame}
+
+\begin{frame}
+  \frametitle{\CJKfamily{hei}let表达式} 
+  \newtheorem{letE}{let表达式} 
+  \begin{letE}
+    \begin{displaymath}
+      (let ((x \quad E_0)) \quad E_1) \equiv (\lambda x \centerdot E_1) E_0  
+    \end{displaymath} 
+    把$E_1$中的变量x的值绑定为$E_0$
+  \end{letE}
+  引入let表达式后$\lambda$演算就有了2种变量 
+  \begin{itemize}
+  \item $\lambda$变量：形参变量 
+  \item let变量：过程体内的临时变量
+  \end{itemize}
+\end{frame} 
 
 \section{\CJKfamily{hei}致谢}
 \begin{frame}
