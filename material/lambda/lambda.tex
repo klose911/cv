@@ -680,13 +680,14 @@
   \frametitle{\CJKfamily{hei}$\lambda$计算模型：例子} 
   \begin{itemize}
   \item $\lambda$演算可以描述复杂计算，计算能力等价于图灵计算模型 
+  \item 给定２个$\lambda$表达式，如果两者等价则输出TRUE，反之则输出FALSE。这是第一个被证明{\color{red}没有算法可以解决}的问题
   \item quote，atom，cons，car，cdr，eq，cond是LISP的7个原始操作符 
     \begin{itemize}
     \item quote ： 引用函数，它的自变量不被求值, 而是作为整个表达式的值返回
     \item cond： 条件函数，可以由IFTHENELSE定义
     \item atom，cons，car，cdr，eq：已经被定义
     \end{itemize}
-  \item 用这7个操作符可以写出最早版本的eval函数，这也就是最简单的{\color{red}解释器}\cite{RootsOfLisp}
+  \item 用这7个操作符可以写出最原始版本的eval函数，也就是最简单的{\color{red}解释器}\cite{RootsOfLisp}
   \end{itemize}
 \end{frame} 
 
@@ -699,10 +700,10 @@
     \begin{itemize}
     \item 扩充表达式
       \begin{itemize}
-      \item 常数：TRUE, FALSE, 整数
-      \item 标准函数 
-      \item 条件表达式
-      \item let表达式
+      \item 常数：TRUE，FALSE，整数
+      \item 标准函数：ADD，SUB，MULT，CONS，CAR，CDR ...
+      \item 条件表达式：COND((P1 E1) (P2 E2)) 
+      \item let表达式：(LET((V1 E1)) E) 
       \end{itemize}
     \item 扩充变换系统 
     \item 扩充数据类型：INT，REAL，BOOLEAN
