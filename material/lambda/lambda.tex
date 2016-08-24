@@ -38,8 +38,8 @@
 \begin{CJK}{UTF8}{song}
 \bibliographystyle{unsrt} 
 \title{\CJKfamily{hei}$\lambda$演算}
-\author{\CJKfamily{hei}吴善良}
-%% \institute{\CJKfamily{hei} 易保网络技术有限公司}
+\author{\CJKfamily{hei}Klose Wu}
+% \institute{\CJKfamily{hei} 易保网络技术有限公司}
 \date{\CJKfamily{hei} \today}
 
 \frame{\titlepage}
@@ -66,9 +66,9 @@
   \begin{LE}
     $\lambda$表达式由变量名，抽象符号$\lambda$  $\centerdot$  $($  $)$组成 
     \begin{eqnarray*}
-      <\textrm{$\lambda$表达式}> & ::= & <\textrm{变量名}> \\
-      <\textrm{$\lambda$表达式}> & ::= & (<\textrm{$\lambda$表达式}>\quad<\textrm{$\lambda$表达式}>) \\ 
-      <\textrm{$\lambda$表达式}> & ::= & (\lambda<\textrm{变量名}>.<\textrm{$\lambda$表达式}>)  
+      <\textrm{$\lambda$表达式}> & := & <\textrm{变量名}> \\
+      <\textrm{$\lambda$表达式}> & := & (<\textrm{$\lambda$表达式}>\quad<\textrm{$\lambda$表达式}>) \\ 
+      <\textrm{$\lambda$表达式}> & := & (\lambda<\textrm{变量名}>.<\textrm{$\lambda$表达式}>)  
     \end{eqnarray*} 
   \end{LE}      
   \begin{itemize}
@@ -686,8 +686,8 @@
     \item quote ： 引用函数，它的自变量不被求值, 而是作为整个表达式的值返回
     \item cond： 条件函数，可以由IFTHENELSE定义
     \item atom，cons，car，cdr，eq：已经被定义
+    \item 用这7个操作符可以写出最原始版本的eval函数，也就是最简单的{\color{red}解释器}\cite{RootsOfLisp}
     \end{itemize}
-  \item 用这7个操作符可以写出最原始版本的eval函数，也就是最简单的{\color{red}解释器}\cite{RootsOfLisp}
   \end{itemize}
 \end{frame} 
 
