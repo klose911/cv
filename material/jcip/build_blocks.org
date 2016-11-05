@@ -1,0 +1,169 @@
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="css/org.css" />
+#+TITLE: 构建模块
+#+OPTIONS: num:nil
+* 构建模块
+** 同步集合类
+   java提供了多种synchronized集合, 比如Vector, HashTable, Collections的synchronizedXxx方法的返回值. 这些集合封装了状态变量，对每个public方法添加synchronized关键字
+*** 同步集合类的问题
+    #+BEGIN_SRC java
+      @NotThreadSafe
+      public static Object getLast(Vector list) {   
+              int lastIndex = list.size() - 1;   
+              return list.get(lastIndex);   
+      }   
+        
+      public static void deleteLast(Vector list) {   
+              int lastIndex = list.size() - 1;   
+              list.remove(lastIndex);   
+      }  
+    #+END_SRC
+    假设Vector对象中含有10个元素, 多线程环境下可能出现这样的场景: 
+    线程1调用getLast方法, 计算得知lastIndex为9, 然后线程失去CPU使用权. 接着线程2调用deleteLast方法, 其lastIndex也为9, 线程2删除了第9个元素. 然后线程1重新获得CPU时间, 线程1会试图获取第9个元素, 但是该元素已经被线程2删除了, 此时将抛出ArrayIndexOutOfBoundsException异常
+    
+    对于列表的复合操作仍然需要额外的同步保证原子性
+*** ConcurrentModificationException　
+    迭代集合时, 每个集合内部都拥有一个名为modCount的成员变量, 如果集合发生了变化, 就会更改modCount的值. 使用Iterator开始迭代时，会将modCount的赋值给expectedModCount, 在迭代过程中, 通过每次比较两者是否相等来判断集合是否在内部或被其它线程修改. 如果expectedModCount和modCount不相等, 将抛出ConcurrentModificationException异常　
+    
+    #+BEGIN_SRC java
+  Iterator<Integer> it = list.iterator();  
+  while(it.hasNext()) {  
+          System.out.println(it.next());  
+          // remove操作会导致modCount的值被修改, 从而引发ConcurrentModificationException异常  
+          list.remove(0);  
+  }  
+    #+END_SRC
+    
+1. 可以使用同步集合类
+2. 先同步的clone一份集合然后对clone集合进行迭代, clone的过程仍然需要同步
+   
+#+BEGIN_SRC java
+  ArrayList<Integer> listClone = null;  
+  // clone时依然需要同步  
+  synchronized (list) {  
+          listClone = (ArrayList<Integer>) list.clone();  
+  }  
+  Iterator<Integer> it = listClone.iterator();  
+  while (it.hasNext()) {  
+          doSomething(it.next());  
+  }  
+#+END_SRC
+
+** 并发集合类　
+- ConcurrentHashMap代替散列Map
+- CopyOnWriteArrayList代替同步List
+- CopyOnWriteArraySet代替同步Set
+- ConcurrentSkipListMap代替同步SortMap
+- ConcurrentSkipListSet代替同步SortSet
+  
+*** ConcurrentHashMap
+1. ConcurrentHashMap具有更好的并发性能. ConcurrentHashMap是线程安全的, 但是其同步策略和SynchronizedMap有很大不同. ConcurrentHashMap在read时几乎不用加锁, 而write时使用的是细粒度的分段锁, ConcurrentHashMap甚至可以做到并发write 
+2. 由于ConcurrentHashMap的分段加锁机制, 使用ConcurrentHashMap类时, 调用方无法再自行加锁.
+3. 由于调用方无法自行加锁, 因此ConcurrentHashMap类提供了一些常见的复合操作
+   
+   #+BEGIN_SRC java
+     // 只有key不是集合中的键时才插入该键值对
+     V putIfAbsent(K key, V value); 
+     // 集合中存在该键值对时才删除
+     boolean remove(K key, V value); 
+     // 只有key和oldValue是集合中的键值对是才进行替换
+     boolean replace(K key, V oldValue, V newValue); 
+     // 只有key是集合中的key时才进行替换
+     V replace(K key, V newValue);
+   #+END_SRC
+   
+4. 迭代时不需要调用方进行额外的同步. ConcurrentHashMap使用的迭代器被称为weakly consistent(弱一致)迭代器, 弱一致迭代器不会在迭代期间抛出ConcurrentModificationException异常. 迭代开始后, 如果其他线程删除了ConcurrentHashMap集合的某个元素, 且被删除的元素尚未由next方法返回, 则该元素就不会被迭代器返回给调用方. 如果迭代开始后其他线程往ConcurrentHashMap集合中插入了新的元素, 那么新的元素可能会也可能不会被返回给调用方. 无论如何, 弱一致迭代器都保证不会将同一个元素多次返回给调用方 
+5. 调用ConcurrentHashMap对象的size, isEmpty等方法时(这些方法是针对整体Map的操作), 性能比较差. ConcurrentHashMap适合在要求高并发高性能的场合下使用, 在这些场景下, size或者isEmpty等方法用处不大, 这是可以接受的权衡
+   
+*** CopyOnWriteArrayList 
+1. CopyOnWriteArrayList是线程安全的, 且处理读操作不需要进行同步和加锁. 所以读操作具有很好的并发性
+2. CopyOnWriteArrayList的每次写操作都会把底层的数组进行拷贝，然后对拷贝数组进行修改，代价很高，CopyOnWriteArrayList只适用于读操作频率远远大于写操作频率的场景
+3. CopyOnWriteArrayList无法在调用方进行额外加锁. 同时CopyOnWriteArrayList也提供了一些常用的复合操作, 如putIfAbsent等 
+   
+   #+BEGIN_SRC java
+     // Insert into map only if no value is mapped from K
+     V putIfAbsent(K key, V value);
+     // Remove only if K is mapped to V
+     boolean remove(K key, V value);
+     // Replace value only if K is mapped to oldValue
+     boolean replace(K key, V oldValue, V newValue);
+     // Replace value only if K is mapped to some value
+     V replace(K key, V newValue);
+   #+END_SRC
+   
+4. CopyOnWriteArrayList的迭代只能反应迭代开始时CopyOnWriteArrayList对象所持有的集合. 迭代期间不会抛出ConcurrentModificationException异常, 调用方不需要进行额外的加锁(实际上也没有进行)
+   
+** BlockingQueue接口 
+   BlockingQueue的容量可以是无限的, 也可以是有限的. 无限容量的BlockingQueue永远也不会发生队列已满的事件
+   
++ put方法用于将数据放入队列, 如果队列已满, put方法所在的线程将阻塞, 直到队列不满 
++ take方法用于从队列中取出数据, 如果队列为空, take方法所在的线程将阻塞, 直到队列不为空 
++ offer用于将数据放入队列, 如果队列已满, 将最多等待指定的时间, offer返回true时说明数据成功入队, 否则说明没有成功
++ poll用于从队列中取出数据, 如果队列为空, 最多等待指定的时间, poll返回值为null时说明没有取到数据
+  
+  
+*** 常见实现类 
++ ArrayBlockingQueue底层使用循环数组实现
++ LinkedBlockingQueue底层使用链表实现
++ PriorityBlockingQueue则是一个可排序的阻塞队列, 可以按照元素的自然顺序(元素需要实现Comparable接口)或者指定的Comparator排序 
++ SynchronousQueue不用保存元素到Queue，直接交付给消费线程
+  
+*** 生产消费模式　
+    生产者
+    #+BEGIN_SRC java
+      public class FileCrawler implements Runnable {
+              private final BlockingQueue<File> fileQueue;
+              private final FileFilter fileFilter;
+              private final File root;
+              ...
+              public void run() {
+                      try {
+                              crawl(root);
+                      } catch (InterruptedException e) {
+                              Thread.currentThread().interrupt();
+                      }
+              }
+              private void crawl(File root) throws InterruptedException {
+                      File[] entries = root.listFiles(fileFilter);
+                      if (entries != null) {
+                              for (File entry : entries)
+                                      if (entry.isDirectory())
+                                              crawl(entry);
+                                      else if (!alreadyIndexed(entry))
+                                              fileQueue.put(entry);
+                      }
+              }
+      }
+
+    #+END_SRC
+    
+    消费者
+    #+BEGIN_SRC java
+  public class Indexer implements Runnable {
+          private final BlockingQueue<File> queue;
+          public Indexer(BlockingQueue<File> queue) {
+                  this.queue = queue;
+          }
+          public void run() {
+                  try {
+                          while (true)
+                                  indexFile(queue.take());
+                  } catch (InterruptedException e) {
+                          Thread.currentThread().interrupt();
+                  }
+          }
+  }
+    #+END_SRC
+    主线程
+    #+BEGIN_SRC java
+  public static void startIndexing(File[] roots) {
+          BlockingQueue<File> queue = new LinkedBlockingQueue<File>(BOUND);
+          FileFilter filter = new FileFilter() {
+                          public boolean accept(File file) { return true; }
+                  };
+          for (File root : roots)
+                  new Thread(new FileCrawler(queue, filter, root)).start();
+          for (int i = 0; i < N_CONSUMERS; i++)
+                  new Thread(new Indexer(queue)).start();
+  }
+    #+END_SRC
+    

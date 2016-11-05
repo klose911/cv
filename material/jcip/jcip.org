@@ -1,5 +1,6 @@
-#+TITLE:銆�Java骞跺彂缂栫▼瀹炴垬 
-#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="../main.css" />
-#+INCLUDE: "thread_safe.org" :minlevel 1 
-#+INCLUDE: "sharing_objects.org" :minlevel 1
-#+INCLUDE: "composing_objects.org" :minlevel 1
+#+TITLE: Java并发编程实战
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="css/org.css" />
+   + [[file:thread_safe.org][线程安全]]
+   + [[file:sharing_objects.org][对象共享]]
+   + [[file:composing_objects.org][对象组合]]
+   + [[file:build_blocks.org][基础模块]]

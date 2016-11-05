@@ -1,3 +1,5 @@
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="css/org.css" />
+#+OPTIONS: num:nil
 * 对象分享　
 ** 可见性
    一个线程修改了变量的值, 另一个线程并非总是能够及时获知最新的值

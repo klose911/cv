@@ -1,3 +1,6 @@
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="css/org.css" />
+#+TITLE: 对象组合
+#+OPTIONS: num:nil
 * 对象组合
 ** 设计线程安全的类　
 1. 确定组成对象状态的变量

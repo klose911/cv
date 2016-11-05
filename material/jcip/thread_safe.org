@@ -1,3 +1,6 @@
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="css/org.css" />
+#+TITLE: 线程安全
+#+OPTIONS: num:nil
 * 线程安全　
 ** 定义　
    多线程环境下无需调用方进行任何同步处理也能保证正确性, 线程安全的类无须使用者考虑同步问题　　
