@@ -1,8 +1,8 @@
+#+TITLE: 对象分享
 #+HTML_HEAD: <link rel="stylesheet" type="text/css" href="css/org.css" />
 #+OPTIONS: num:nil
-* ���������
-** �ɼ���
-   һ���߳��޸��˱�����ֵ, ��һ���̲߳��������ܹ���ʱ��֪���µ�ֵ
+* 可见性
+   一个线程修改了变量的值, 另一个线程并非总是能够及时获知最新的值
    
    #+BEGIN_SRC java
   public class NoVisibility {
@@ -17,18 +17,18 @@
           }
           public static void main(String[] args) {
                   new ReaderThread().start();
-                  number = 42; //reader�߳��޷�����
+                  number = 42; //reader线程无法看见
                   ready = true;
           }
   }
    #+END_SRC
-*** ��ʱ�ı���
-*** 64λ�������Է�ԭ�ӡ�
-*** �����ܱ�֤�ɼ�
-*** volatile������
-    volatile�޷���֤������ԭ����, ֻ�ܱ�֤�����Ŀɼ��ԣ�����
-1. ���Ĳ������ڵ�ǰֵ, �����ܹ�ȷ��ֻ���ڵ�һ�߳����޸ı�����ֵ
-2. ��������Ҫ������״̬������ͬ���벻��Լ�� 
+** 过时的变量
+** 64位变量可以非原子　
+** 加锁能保证可见
+** volatile变量　
+    volatile无法保证操作的原子性, 只能保证变量的可见性！！！
+1. 更改不依赖于当前值, 或者能够确保只会在单一线程中修改变量的值
+2. 变量不需要与其他状态变量共同参与不变约束 
    
 #+BEGIN_SRC java
   volatile boolean asleep;
@@ -37,8 +37,8 @@
           countSomeSheep();
 #+END_SRC
 
-** this���ݡ�
-   �ڹ��캯������֮ǰ�����߳̾ͳ��иö�������á�
+* this逃逸　
+   在构造函数返回之前其他线程就持有该对象的引用　
    
    #+BEGIN_SRC java
   public class ThisEscape {  
@@ -50,12 +50,12 @@
           private class EscapeRunnable implements Runnable {  
                   @Override  
                   public void run() {  
-                          // ͨ��ThisEscape.this�Ϳ���������Χ�����, ���Ǵ�ʱ��Χ�������ܻ�û�й������, ����������Χ���this���õ�����  
+                          // 通过ThisEscape.this就可以引用外围类对象, 但是此时外围类对象可能还没有构造完成, 即发生了外围类的this引用的逃逸  
                   }  
           }  
    #+END_SRC
    
-   ʹ��һ��private�Ĺ������������̻߳�ע�������public�Ĺ������������ù�����
+   使用一个private的构造器中启动线程或注册监听和public的工厂方法来调用构造器
    
    
    #+BEGIN_SRC java
@@ -75,23 +75,23 @@
           private class EscapeRunnable implements Runnable {  
                   @Override  
                   public void run() {  
-                          // ͨ��ThisEscape.this�Ϳ���������Χ�����, ��ʱ���Ա�֤��Χ������Ѿ��������  
+                          // 通过ThisEscape.this就可以引用外围类对象, 此时可以保证外围类对象已经构造完成  
                   }  
           }  
   }  
    #+END_SRC
    
-** �߳����ơ�
-*** ջ���ƣ����������ڷ����ڡ�
-*** ThreadLocal��
-    �̲߳���ȫ��JDBC Connection���Է���ThreadLocal���桡
+* 线程限制　
+** 栈限制，变量申明在方法内　
+** ThreadLocal类
+    线程不安全的JDBC Connection可以放在ThreadLocal里面　
     
-** �������
-1. ������ɺ����������޷��ı䣬�������Զ���final
-2. �������this���ݡ�
+* 不变对象
+1. 构造完成后所有属性无法改变，所有属性都是final
+2. 不会出现this逃逸　
    
-*** volatile�Ͳ���������ͬ��
-    ������״̬�����仯��ʱ�����¹���һ���µĲ��������volatile��֤ÿ���¹���Ĳ������ɼ���
+** volatile和不变对象进行同步
+    当对象状态发生变化的时候，重新构造一个新的不变对象，用volatile保证每个新构造的不变对象可见性
     
     #+BEGIN_SRC java
       @Immutable
@@ -126,12 +126,13 @@
               }
       }
     #+END_SRC
-    ��
+    　
     
-** ��ȫ������
-1. �߳�����. ������ƶ���ֻ���ɵ�һ���̷߳���, ��ô���۹����ĸ���Ա, �����������������
-2. �������ɱ��Ա. ��������ĳ����Ա�ǲ��ɱ��, ��ô�����ó�Ա���������������
-3. ������ʵ�ϵĲ��ɱ��Ա. ��������ĳ����Ա�ǿɱ��, ��Լ�����ʸó�Ա�������̲߳�Ҫȥ�޸������Ա, ��ô�ó�Ա����ʵ�ϲ��ɱ��. ���ֳ����¹����ó�Ա���������������
-4. �����̰߳�ȫ�ĳ�Ա. �̰߳�ȫ�ĳ�Ա�ڲ������Ʋ�������, ��˹����̰߳�ȫ�ĳ�Ա��ǡ����
-5. �����ɱ�ķ��̰߳�ȫ�ĳ�Ա. ���Ҫ�����з��ʸó�Ա���߳�ʹ���ض���������ͬ��
-��
+* 安全发布　
+1. 线程限制. 如果限制对象只可由单一的线程访问, 那么无论公开哪个成员, 都不会产生并发问题
+2. 公开不可变成员. 如果对象的某个成员是不可变的, 那么公开该成员不会产生并发问题
+3. 公开事实上的不可变成员. 如果对象的某个成员是可变的, 但约定访问该成员的所有线程不要去修改这个成员, 那么该成员是事实上不可变的. 这种场景下公开该成员不会产生并发问题
+4. 公开线程安全的成员. 线程安全的成员内部会妥善并发问题, 因此公开线程安全的成员是恰当的
+5. 公开可变的非线程安全的成员. 这就要求所有访问该成员的线程使用特定的锁进行同步
+　
+[[file:composing_objects.org][Next:对象组合]]　[[file:thread_safe.org][Previous:线程安全]]　[[file:jcip.org][Up:目录]]

@@ -4,4 +4,4 @@
    + [[file:composing_objects.org][composing_objects]]
    + [[file:sharing_objects.org][sharing_objects]]
    + [[file:thread_safe.org][thread_safe]]
-   + [[file:jcip.org][　Java并发编程实战]]
+   + [[file:jcip.org][銆�Java骞跺彂缂栫▼瀹炴垬]]

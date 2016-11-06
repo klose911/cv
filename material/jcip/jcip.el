@@ -8,13 +8,13 @@
          :publishing-directory "~/tmp/jcip/"
          :recursive t
          :publishing-function org-html-publish-to-html
-         ;; :headline-levels 4
-	 ;; :auto-preamble nil
-         ;; :auto-sitemap t
-         ;; :sitemap-filename "jcip.org"
-         ;; :sitemap-title "Java并发编程实战"
-         ;; :table-of-contents t
-	 ;; :style "<link rel='stylesheet' type='text/css' href='css/org.css'/>"
+         :headline-levels 4
+         :auto-sitemap nil
+	 :section-numbers nil
+         :with-toc nil
+         :html-head "<link rel=\"stylesheet\"
+                       href=\"css/org.css\" type=\"text/css\"/>"
+         :html-preamble t
          )
 
         ;; These are static files (images, pdf, etc)
