@@ -128,3 +128,161 @@ ExecutorService接口继承自Executor, 而预定义的线程池类大多实现�
 几乎没有理由继续使用Timer调度定时任务了
 
 * 发现可利用的并发
+
+** 返回结果的任务　
+Executor的使用Runnable作为基本的任务表达形式，但是Runnable无法返回结果或抛出异常\\
+Callable作为Runnable的扩展，可以返回结果或抛出异常
+#+BEGIN_SRC java
+  public interface Callable<V> {
+          V call() throws Exception;
+  }
+#+END_SRC
+Executor提交的任务有４个生命周期：创建，提交，开始和完成\\
+已经提交但尚未开始的任务可以取消，已经开始执行但尚未完成的任务只有它们能响应中断才能取消，取消一个已经完成的任务没有任何影响\\
+Future表示一个任务的生命周期，并提供相应的方法判断任务是否已经开始，完成，取消，以及获取任务结果，取消任务等
+
+#+BEGIN_SRC java
+  public interface Future<V> {
+          boolean cancel(boolean mayInterruptIfRunning);
+          boolean isCancelled();
+          boolean isDone();
+          V get() throws InterruptedException, ExecutionException,
+                  CancellationException;
+          V get(long timeout, TimeUnit unit)
+                  throws InterruptedException, ExecutionException,
+                  CancellationException, TimeoutException;
+  }
+#+END_SRC
+get方法的行为取决与任务的状态
+- 已经完成：立即返回结果或者抛出异常ExecutionException, 可以通过getClause获得被封装的初始异常
+- 没有完成：阻塞主线程直到任务结束
+- 取消：将抛出CancellationException
+
+创建Future
++ ExecutorService中所有submit方法都会返回一个Future, 将Runnable或Callable提交给Executor得到Future
++ 也可以显式地为Runnable或者Callable创建一个FutureTask提交给Executor
++ ExecutorService也可以使用newTaskFor方法为Callable获得Future
+#+BEGIN_SRC java
+  protected <T> RunnableFuture<T> newTaskFor(Callable<T> task) {
+          return new FutureTask<T>(task);
+  }
+#+END_SRC
+
+使用Future渲染图片
+#+BEGIN_SRC java
+  public class FutureRenderer implements Render {
+          private static final int NTHREADS = 100;
+          private final ExecutorService executor = Executors.newFixedThreadPool(NTHREADS);
+
+          @Override
+          public void renderPage(CharSequence source) {
+                  final List<ImageInfo> imageInfos = scanForImageInfo(source);
+                  Callable<List<ImageData>> task;
+                  task = () -> {
+                          List<ImageData> result
+                          = new ArrayList<>();
+                          imageInfos.forEach((imageInfo) -> {
+                                          result.add(imageInfo.downloadImage());
+                                  });
+                          return result;
+                  };
+                  Future<List<ImageData>> future = executor.submit(task);
+                  // 渲染文本  
+                  renderText(source);
+                  try {
+                          // get方法将阻塞, 直到task完成下载  
+                          List<ImageData> imageData = future.get();
+                          imageData.forEach((data) -> {
+                                          // 渲染图片  
+                                          renderImage(data);
+                                  });
+                  } catch (InterruptedException e) {
+                          // Re-assert the thread’s interrupted status
+                          Thread.currentThread().interrupt();
+                          // We don’t need the result, so cancel the task too
+                          future.cancel(true);
+                  } catch (ExecutionException e) {
+                          throw launderThrowable(e.getCause());
+                  }
+          }
+  }
+#+END_SRC
+
+下载图片任务比渲染文本任务慢的多，可以把下载图片拆分成多个任务
+** CompletionService
+CompletionService把Executor和BlockingQueue融合在一起 \\ 
+将Callable任务提交给CompletionService执行，然后使用类似队列操作的take和poll方法来获得已知的结果，这些结果会在全部结束时候封装为Future \\ 
+
+ExecutorCompletionService实现了CompletionService \\
+ExecutorCompletionService的构造函数中创建一个BlockingQueue来保存计算完成的结果。当计算完成时候，调用FutureTask的done方法。当提交某个任务的时候，该任务将包装成为QueueingFuture, 这是FutureTask的一个子类，然后改写子类的done方法，将结果放入BlockingQueue中。take和poll方法委托给BlockingQueue, 这些方法在得出结果前会阻塞
+#+BEGIN_SRC java
+  public class ExecutorCompletionService<V> implements CompletionService<V> {
+...
+          private final BlockingQueue<Future<V>> completionQueue;
+
+          public ExecutorCompletionService(Executor executor) {
+...
+                  this.completionQueue = new LinkedBlockingQueue<Future<V>>();
+          }
+          
+          public Future<V> submit(Callable<V> task) {  
+                  if (task == null) throw new NullPointerException();  
+                  RunnableFuture<V> f = newTaskFor(task);  
+                  // 将任务包装成QueueingFuture对象后委托给executor执行  
+                  executor.execute(new QueueingFuture(f));  
+                  return f;  
+          }
+
+          private class QueueingFuture<V> extends FutureTask<V> {
+                  QueueingFuture(Callable<V> c) { super(c); }
+                  QueueingFuture(Runnable t, V r) { super(t, r); }
+                  protected void done() {
+                          completionQueue.add(this);
+                  }
+          }
+
+          public Future<V> take() throws InterruptedException {  
+                  return completionQueue.take();  
+          }  
+    
+          public Future<V> poll() {  
+                  return completionQueue.poll();  
+          }
+          ...
+  }
+
+#+END_SRC
+
+使用CompletionService渲染
+
+#+BEGIN_SRC java
+  public class CompletionRenderer implements Render {
+          private final ExecutorService executor = Executors.newCachedThreadPool();
+
+          public void renderPage(CharSequence source) {
+                  List<ImageInfo> info = scanForImageInfo(source);
+                  // 将图片下载拆分为多个任务  
+                  CompletionService<ImageData> completionService
+                          = new ExecutorCompletionService<>(executor);
+                  info.forEach((imageInfo) -> {
+                                  completionService.submit(() -> imageInfo.downloadImage());
+                          });
+                  renderText(source);
+                  try {
+                          for (int t = 0, n = info.size(); t < n; t++) {
+                                  // take方法可能阻塞: 当已完成队列中为空时  
+                                  Future<ImageData> f = completionService.take();
+                                  // get方法不会阻塞, 因为从take方法返回的Future对象肯定是已完成的  
+                                  ImageData imageData = f.get();
+                                  renderImage(imageData);
+                          }
+                  } catch (InterruptedException e) {
+                          Thread.currentThread().interrupt();
+                  } catch (ExecutionException e) {
+                          throw launderThrowable(e.getCause());
+                  }
+          }
+  }
+#+END_SRC
+
+[[file:cancellation.org][Next:任务取消]]　[[file:build_blocks.org][Previous:基础模块]]　[[file:jcip.org][Up:目录]]
