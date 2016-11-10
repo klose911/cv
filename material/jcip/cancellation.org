@@ -1,4 +1,168 @@
-#+TITLE: 任务取消
+#+TITLE: 取消和关闭
 #+HTML_HEAD: <link rel="stylesheet" type="text/css" href="css/org.css" />
 #+OPTIONS: num:nil
 * 任务取消
+启动任务之后, 大多数时候我们等待运行完成，但是有时我们希望可以提前终止任务的运行:
+1. 用户申请取消时，比如用户点击了取消按钮.
+2. 时间限制的任务，有些任务具有时间限制, 如果在一定的时间内仍然没有得到想要的结果, 可能希望终止该任务的运行.
+3. 发生特定的事件时，比如多个任务同时在不同的位置搜索某一文件, 当其中一个搜索到了想要的文件, 应该终止其他仍在运行的任务
+4. 发生错误时，比如发生了磁盘已满的错误, 需要向磁盘写入数据的任务应该提前终止
+5. 应用或者服务被关闭时
+
+** 设置自定义flag结束线程
+   #+BEGIN_SRC java
+     public class PrimeGenerator implements Runnable {
+             @GuardedBy("this")
+             private final List<BigInteger> primes = new ArrayList<BigInteger>();
+
+             //自定义的flag, 为保证线程可见性, 将其声明为volatile 
+             private volatile boolean cancelled;
+
+             @Override
+             public void run() {
+                     BigInteger p = BigInteger.ONE;
+                     // 每次循环之前检查cancelled标记的值, 如果cancelled为true, 循环终止, 线程也就运行结束了 
+                     while (!cancelled) {
+                             p = p.nextProbablePrime();
+                             synchronized (this) {
+                                     primes.add(p);
+                             }
+                     }
+             }
+
+             public void cancel() {
+                     cancelled = true;
+             }
+
+             public synchronized List<BigInteger> get() {
+                     return new ArrayList<>(primes);
+             }
+     }
+
+   #+END_SRC
+
+测试代码
+   #+BEGIN_SRC java
+     public static void main(String[] args) {
+             PrimeGenerator generator = new PrimeGenerator();
+             Thread t = new Thread(generator);
+             t.start();
+                  
+             try {
+                     Thread.sleep(1000);
+             } catch (InterruptedException e) {
+                     //除非明确知道主线程应该终止，不然通常情况下应该重新抛出InterruptedException或者恢复被中断的线程
+             }
+             // 通过调用cancel方法, 将自定义的cancelled标记设置为true, 从而使得线程t运行终止  
+             generator.cancel();
+             System.out.println(generator.get().size());
+     }
+   #+END_SRC
+
+*** 自定义flag的问题
+假如循环中执行了阻塞操作, 那么即使cancelled标记被设置为true, run方法却没有机会去检查cancelled标记的值, 线程将迟迟无法结束！　
+#+BEGIN_SRC java
+  class BrokenPrimeProducer extends Thread {
+          private final BlockingQueue<BigInteger> queue;
+          private volatile boolean cancelled = false;
+          BrokenPrimeProducer(BlockingQueue<BigInteger> queue) {
+                  this.queue = queue;
+          }
+          public void run() {
+                  try {
+                          BigInteger p = BigInteger.ONE;
+                          while (!cancelled)
+                                  // 当队列已满时, put方法将会阻塞. 一旦put方法阻塞
+                                  //且没有其他线程从队列中取数据时, 阻塞将一直持续下去  
+                                  queue.put(p = p.nextProbablePrime());
+                  } catch (InterruptedException consumed) { }
+          }
+          public void cancel() { cancelled = true; }
+  }
+#+END_SRC
+
+测试代码
+#+BEGIN_SRC java
+  public static void main(String[] args) {  
+          // 设置队列的最大容量为10  
+          BlockingQueue<BigInteger> primes = new LinkedBlockingQueue<BigInteger>(10);  
+          BrokenPrimeProducer producer = new BrokenPrimeProducer(primes);  
+          producer.start();  
+            
+          try {  
+                  Thread.sleep(1000);  
+          } catch (InterruptedException e) {
+          }  
+          producer.cancel();  
+  }  
+#+END_SRC
+
+** 中断
+java没有直接规定如何安全的提前终止线程的运行, 而是提供了不具约束力的协商式机制: 线程A可以请求线程B中断, 但是是否响应, 何时响应, 如何响应中断请求, 由线程B自己决定　\\
+每个线程对象都有一个boolean型的中断标记, 其他线程请求目标线程中断时, 会将目标线程的中断标记设置为true, 然后由目标线程自己决定如何处理。所以中断线程时, 需要明确知道目标线程的中断机制, 如果不知道目标线程会怎样处理中断请求, 不要贸然请求其中断
+
+Thread类中与中断标记相关的方法有:
+#+BEGIN_SRC java
+  public class Thread {   
+          // 请求线程中断, 该方法会将线程的中断标记设置为true. 如何处理中断由目标线程决定  
+          public void interrupt() { ... }   
+          // 返回中断标记的值  
+          public boolean isInterrupted() { ... }  
+          // 静态方法用于重置当前进程的中断标记(将其设置为false), 并返回重置之前的值  
+          public static boolean interrupted() { ... }   
+          ...   
+  }  
+#+END_SRC
+
+*** 可中断的阻塞方法
+java API中的大多数阻塞方法都是可中断的, 如Thread.sleep, Object.wait, BlockingQueue.put等 \\
+可中断的阻塞方法有一个共同的特点: 声明抛出InterruptedException异常 \\
+可中断的阻塞方法在阻塞期间会周期性检查当前线程的中断标记, 如果发现当前线程的中断标记为true, 就重置中断标记后提前从阻塞状态返回, 并抛出InterruptedException异常  
+
+使用中断终止PrimeProducer
+
+#+BEGIN_SRC java
+  class PrimeProducer extends Thread {
+          private final BlockingQueue<BigInteger> queue;
+          
+          PrimeProducer(BlockingQueue<BigInteger> queue) {
+                  this.queue = queue;
+          }
+
+          public void run() {
+                  try {
+                          BigInteger p = BigInteger.ONE;
+                          // 每次循环前检查当前线程的中断标记, 如果中断标记为设定为true, 则循环结束  
+                          // 就算当前线程阻塞在put方法上, 在阻塞期间也会周期性检查中断标记, 
+                          //一旦发现中断标记为true, 就会从阻塞状态中返回, 并抛出InterruptedException异常  
+                          while (!Thread.currentThread().isInterrupted()) {
+                                  queue.put(p = p.nextProbablePrime());
+                          }
+                  } catch (InterruptedException consumed) {
+                          System.out.println("InterruptedException happened");
+                  }
+          }
+
+          public void cancel() {
+                  // interrupt方法会将当前线程的中断标记设置为true  
+                  interrupt();
+          }
+  }
+#+END_SRC
+
+测试代码
+#+BEGIN_SRC java
+  public static void main(String[] args) {
+          // 设置队列的最大容量为10  
+          BlockingQueue<BigInteger> primes = new LinkedBlockingQueue<>(10);
+          PrimeProducer producer = new PrimeProducer(primes);
+          producer.start();
+
+          try {
+                  Thread.sleep(1000);
+          } catch (InterruptedException e) {
+          }
+          //
+          producer.cancel();
+  }
+#+END_SRC
