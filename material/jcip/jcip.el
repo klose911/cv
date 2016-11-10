@@ -15,6 +15,7 @@
          :html-head "<link rel=\"stylesheet\"
                        href=\"css/org.css\" type=\"text/css\"/>"
          :html-preamble t
+	 :htmlized-source t
          )
 
         ;; These are static files (images, pdf, etc)
