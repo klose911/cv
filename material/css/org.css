@@ -278,7 +278,10 @@
     pre.a:hover {  
         text-decoration: underline;  
     }  
-    
+    pre.src {
+	background-color: #303030;
+	color: #e5e5e5;
+    }    
     /* Styles for org-info.js */  
     
     .org-info-js_info-navigation  
