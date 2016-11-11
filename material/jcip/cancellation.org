@@ -166,3 +166,180 @@ java API中的大多数阻塞方法都是可中断的, 如Thread.sleep, Object.w
           producer.cancel();
   }
 #+END_SRC
+
+** 处理InterruptedException
+*** 不catch直接向上层抛出，或者catch住做一些清理工作之后重抛该异常
+这样的处理使得你的方法也成为一个可中断的阻塞方法 
+
+#+BEGIN_SRC java
+  // 直接向上层抛出InterruptedException, dosomething方法也是一个可中断的阻塞方法  
+  private void dosomething() throws InterruptedException {  
+          Thread.sleep(1000);  
+  }  
+#+END_SRC
+*** 不能向上抛出InterruptedException异常
+catch之后, 必须设置当前线程的中断标记为true, 以表明当前线程发生了中断, 以便调用栈上层进行处理
+#+BEGIN_SRC java
+  public class InterruptedExceptionHandler implements Runnable {  
+          private Object lock = new Object();  
+    
+          @Override  
+          public void run() {
+                  while (!Thread.currentThread().isInterrupted()) {  
+                          dosomething();  
+                  }  
+          }  
+    
+          private void dosomething() {  
+                  try {  
+                          // Object.wait是一个可中断的阻塞方法
+                          // 如果在其阻塞期间检查到当前线程的中断标记为true, 会重置中断标记后从阻塞状态返回, 并抛出InterruptedException异常  
+                          synchronized (lock) {  
+                                  lock.wait();  // 会重置中断标记后从阻塞状态返回, 并抛出InterruptedException异常 
+                          }  
+                  } catch (InterruptedException e) {  
+                          System.out.println("InterruptedException happened");  
+                          // catch住InterruptedException后设置当前线程的中断标记为true, 以供调用栈上层进行相应的处理  
+                          // 在此例中, dosomething方法的调用栈上层是run方法.  
+                          Thread.currentThread().interrupt();  
+                  }  
+          }  
+        
+          public static void main(String[] args) throws InterruptedException {  
+                  Thread t = new Thread(new InterruptedExceptionHandler());  
+                  t.start();  
+                  Thread.sleep(1000);
+                  // 启动线程1s后设置其中断标记为true
+                  t.interrupt();  
+          }  
+  }  
+#+END_SRC
+主线程启动InterruptedExceptionHandler线程1s后, 设置InterruptedExceptionHandler线程的中断标记为true. 此时InterruptedExceptionHandler线程应该阻塞在wait方法上, 由于wait方法是可中断的阻塞方法, 所以其检查到中断标记为true时, 将重置当前线程的中断标记后抛出InterruptedException, dosomething方法catch住InterruptedException异常后, 再次将当前线程的中断标记设置为true, run方法检查到中断标记为true, 循环不再继续 \\
+假如dosomething方法catch住InterruptedException异常后没有设置中断标记, 其调用栈上层的run方法就无法得知线程曾经发生过中断, 循环也就无法终止
+*** 发生了InterruptedException异常后仍然继续循环执行某阻塞方法 
+将中断状态保存下来, 当循环完成后再根据保存下来的中断状态执行相应的操作
+
+#+BEGIN_SRC java
+  public class InterruptedExceptionContinueHandler implements Runnable {
+          private BlockingQueue<Integer> queue;
+
+          public InterruptedExceptionContinueHandler(BlockingQueue<Integer> queue) {
+                  this.queue = queue;
+          }
+
+          @Override
+          public void run() {
+                  while (!Thread.currentThread().isInterrupted()) {
+                          dosomething();
+                  }
+                  System.out.println(queue.size());
+          }
+
+          private void dosomething() {
+                  // cancelled变量用于表明线程是否发生过中断
+                  boolean cancelled = false;
+                  for (int i = 0; i < 10000; i++) {
+                          try {
+                                  queue.put(i);
+                          } catch (InterruptedException e) {
+                                  // 就算发生了InterruptedException, 循环也希望继续运行下去, 此时将cancelled设置为true, 以表明遍历过程中发生了中断
+                                  System.out.println("InterruptedException happened when i = " + i);
+                                  cancelled = true;
+                          }
+                  }
+                  if (cancelled) {
+                          // 如果当前线程曾经发生过中断, 就将其中断标记设置为true, 以通知dosomething方法的上层调用栈
+                          Thread.currentThread().interrupt();
+                  }
+          }
+
+          public static void main(String[] args) throws InterruptedException {
+                  Thread t = new Thread(new InterruptedExceptionContinueHandler(new LinkedBlockingQueue<Integer>()));
+                  t.start();
+
+                  // 启动线程2ms后设置其中断标记为true
+                  Thread.sleep(2);
+                  t.interrupt();
+          }
+  }
+#+END_SRC
+等待doSomething的循环执行完毕，恢复中断状态为true，再run中处理中断
+
+#+BEGIN_SRC java
+  private void dosomething() {
+          for (int i = 0; i < 10000; i++) {
+                  try {
+                          queue.put(i);
+                  } catch (InterruptedException e) {
+                          System.out.println("InterruptedException happened when i = " + i);
+                          //过早重置中断状态为true会导致put方法又抛出InterruptedException异常, 如此往复直到循环结束.
+                          Thread.currentThread().interrupt();
+                  }
+          }
+  }
+#+END_SRC
+过早重置中断状态为true会导致put方法又抛出InterruptedException异常, 如此往复直到循环结束 
+*** 忽略InterruptedException
+只有当InterruptedException被捕获在调用栈的最上层, 如run方法, 或者main方法中, 且后续代码不检查中断状态时， 其他任何情况下都应该对InterruptedException作处理
+** 限时运行
+
+   #+BEGIN_SRC java
+     private static final ScheduledExecutorService cancelExec = ...;
+     public static void timedRun(Runnable r,
+                                 long timeout, TimeUnit unit) {
+             final Thread taskThread = Thread.currentThread();
+             cancelExec.schedule(new Runnable() {
+                             public void run() { taskThread.interrupt(); }
+                     }, timeout, unit);
+             r.run();
+     }
+   #+END_SRC
+timeRun方法可以在任何一个线程中调用，所以timeRun方法无法知道运行线程处理中断的策略，不应该贸然向对应的线程发出中断请求
++ 在r.run运行完成后，调用线程捕获中断异常是危险的
++ 如果调用线程忽略了中断异常，那只有r.run运行完毕timeRun才能结束，这会超出所要求的运行时间
+
+#+BEGIN_SRC java
+  private static final ScheduledExecutorService cancelExec = Executors.newScheduledThreadPool(10);
+
+  public static void timedRun(final Runnable r,
+                              long timeout, TimeUnit unit) throws InterruptedException {
+
+          class ReThrowableTask implements Runnable {
+                  //在当前线程和taskThread线程共享异常
+                  private volatile Throwable t;
+
+                  public void run() {
+                          try {
+                                  r.run();
+                          } catch (Throwable t) {
+                                  this.t = t;
+                          }
+                  }
+
+                  void rethrow() {
+                          if (t != null)
+                                  throw launderThrowable(t);
+                  }
+          }
+
+          ReThrowableTask task = new ReThrowableTask();
+          final Thread taskThread = new Thread(task);
+          taskThread.start();
+          cancelExec.schedule(new Runnable() {
+                          public void run() {
+                                  taskThread.interrupt();
+                          }
+                  }, timeout, unit);
+          // 停止当前进程，让taskThread运行限时时间
+          // 如果超过限时，则让cancelExec线程池的线程对taskThread发起中断请求
+          taskThread.join(unit.toMillis(timeout));
+          //如果taskThread线程内捕获异常，重新抛出
+          task.rethrow();
+  }
+#+END_SRC
+1. 创建taskThread线程，把运行任务包装到taskThread
+2. 通过join方法让taskThread跑限时时间
+3. 超过限时时间，向taskThread发送中断请求
+4. 在taskThread中发现异常，则重新抛出供主线程处理
+
+** 取消Future
