@@ -1,5 +1,5 @@
 #+TITLE: 任务执行
-#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="css/org.css" />
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="../css/main.css" />
 #+OPTIONS: num:nil
 * 线程中执行任务
 ** 串行执行

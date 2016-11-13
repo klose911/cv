@@ -281,6 +281,7 @@
     pre.src {
 	background-color: #303030;
 	color: #e5e5e5;
+	overflow: auto;
     }    
     /* Styles for org-info.js */  
     

@@ -1,7 +1,8 @@
 #+TITLE: 对象分享
-#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="css/org.css" />
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="../css/main.css" />
 #+OPTIONS: num:nil
 * 可见性
+** 过时的变量
    一个线程修改了变量的值, 另一个线程并非总是能够及时获知最新的值
    
    #+BEGIN_SRC java
@@ -22,11 +23,10 @@
           }
   }
    #+END_SRC
-** 过时的变量
-** 64位变量可以非原子　
-** 加锁能保证可见
+** 64位变量可能非原子
+** 加锁保证可见
 ** volatile变量　
-    volatile无法保证操作的原子性, 只能保证变量的可见性！！！
+    volatile无法保证操作的原子性, 只能保证变量的可见性!
 1. 更改不依赖于当前值, 或者能够确保只会在单一线程中修改变量的值
 2. 变量不需要与其他状态变量共同参与不变约束 
    

@@ -1,4 +1,4 @@
-#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="css/org.css" />
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="../css/main.css" />
 #+TITLE: 对象组合
 #+OPTIONS: num:nil
 * 设计线程安全的类　
@@ -27,7 +27,7 @@
               }
       }
     #+END_SRC
-    使用一个额外对象加锁比使用java内置锁更安全
+    使用一个额外对象加锁比使用java内置锁更灵活
     
 * 委托线程安全
 1. 如果类只包含一个状态变量, 那么类是否是线程安全的, 取决于该状态变量是否是线程安全
