@@ -1,6 +1,6 @@
 #+TITLE: 构建模块
 #+HTML_HEAD: <link rel="stylesheet" type="text/css" href="../css/main.css" />
-#+OPTIONS: num:nil
+#+OPTIONS: num:nil timestamp:nil
 * 同步集合类
   java提供了多种synchronized集合, 比如Vector, HashTable, Collections的synchronizedXxx方法的返回值. 这些集合封装了状态变量，对每个public方法添加synchronized关键字
 ** 同步集合类的问题
@@ -89,7 +89,7 @@
      V replace(K key, V newValue);
    #+END_SRC
    
-4. CopyOnWriteArrayList的迭代只能反应迭代开始时CopyOnWriteArrayList对象所持有的集合. 迭代期间不会抛出ConcurrentModificationException异常, 调用方不需要进行额外的加锁(实际上也没有进行)
+4. CopyOnWriteArrayList的迭代只能反应迭代开始时CopyOnWriteArrayList对象所持有的集合. 迭代期间不会抛出ConcurrentModificationException异常, 调用方不需要进行额外的加锁
    
 * BlockingQueue接口 
   BlockingQueue的容量可以是无限的, 也可以是有限的. 无限容量的BlockingQueue永远也不会发生队列已满的事件

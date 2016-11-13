@@ -1,6 +1,6 @@
 #+TITLE: 对象分享
 #+HTML_HEAD: <link rel="stylesheet" type="text/css" href="../css/main.css" />
-#+OPTIONS: num:nil
+#+OPTIONS: num:nil timestamp:nil
 * 可见性
 ** 过时的变量
    一个线程修改了变量的值, 另一个线程并非总是能够及时获知最新的值
