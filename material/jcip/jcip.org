@@ -1,5 +1,5 @@
 #+TITLE: Java并发编程实战
-# #+HTML_HEAD: <link rel="stylesheet" type="text/css" href="../css/main.css" />
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="../css/main.css" />
 + [[file:thread_safe.org][线程安全]]
 + [[file:sharing_objects.org][对象分享]]
 + [[file:composing_objects.org][对象组合]]

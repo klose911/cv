@@ -5,7 +5,7 @@
         ("jcip-notes"
          :base-directory "~/Documents/programming/latex/cv/material/jcip/" 
          :base-extension "org"
-         :publishing-directory "~/tmp/jcip/html"
+         :publishing-directory "~/Documents/programming/html/klose911.github.io/jcip/html"
          :recursive t
          :publishing-function org-html-publish-to-html
          :headline-levels 4
@@ -22,7 +22,7 @@
         ("jcip-static"
          :base-directory "~/Documents/programming/latex/cv/material/css" ;; Change this to your local dir
          :base-extension "css\\|js\\|png\\|jpg\\|gif\\|pdf\\|mp3\\|ogg\\|swf\\|txt\\|asc"
-         :publishing-directory "~/tmp/jcip/css"
+         :publishing-directory "~/Documents/programming/html/klose911.github.io/jcip/css"
          :recursive t
          :publishing-function org-publish-attachment
          )
@@ -34,4 +34,4 @@
 (defun jcip-publish nil
   "Publish jcip"
   (interactive)
-  (org-publish "jcip" t))
+  (org-publish "jcip" nil))

@@ -1,4 +1,5 @@
-#+TITLE: �̳߳�
+#+TITLE: 线程池
 #+HTML_HEAD: <link rel="stylesheet" type="text/css" href="../css/main.css" />
 #+OPTIONS: num:nil
-* ������̳߳ص��������
+* 任务和线程池的隐形耦合
+* 线程池配置
