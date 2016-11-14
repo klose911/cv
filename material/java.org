@@ -1,5 +1,5 @@
-#+TITLE: Java面试点
-#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="css/org.css" />
+#+TITLE: Java知识
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="css/main.css" />
 #+OPTIONS: num:nil
 
 * jvm 
