@@ -11,10 +11,11 @@
 3. 过多的线程会导致系统稳定性下降　
 
 * Executor框架
-将创建好的线程组织成线程池, 当请求来临时从池中取出线程处理请求, 处理完毕后将线程归还给线程池, 而不是销毁　\\
-通过限制线程池中的线程数, 以克服线程过多时性能和稳定性下降的缺陷 \\
+将创建好的线程组织成线程池, 当请求来临时从池中取出线程处理请求, 处理完毕后将线程归还给线程池, 而不是销毁
 
-Executor框架包含多个线程池的实现, 所有线程池都派生自Executor接口\\
+通过限制线程池中的线程数, 以克服线程过多时性能和稳定性下降的缺陷 
+
+Executor框架包含多个线程池的实现, 所有线程池都派生自Executor接口
  　
 Executor接口只定义了一个方法: execute(Runnable task) 
 #+BEGIN_SRC java
@@ -130,17 +131,19 @@ ExecutorService接口继承自Executor, 而预定义的线程池类大多实现�
 * 发现可利用的并发
 
 ** 返回结果的任务　
-Executor的使用Runnable作为基本的任务表达形式，但是Runnable无法返回结果或抛出异常\\
+Executor的使用Runnable作为基本的任务表达形式，但是Runnable无法返回结果或抛出异常
+
 Callable作为Runnable的扩展，可以返回结果或抛出异常
 #+BEGIN_SRC java
   public interface Callable<V> {
           V call() throws Exception;
   }
 #+END_SRC
-Executor提交的任务有４个生命周期：创建，提交，开始和完成\\
-已经提交但尚未开始的任务可以取消，已经开始执行但尚未完成的任务只有它们能响应中断才能取消，取消一个已经完成的任务没有任何影响\\
-Future表示一个任务的生命周期，并提供相应的方法判断任务是否已经开始，完成，取消，以及获取任务结果，取消任务等
+Executor提交的任务有４个生命周期：创建，提交，开始和完成
 
+已经提交但尚未开始的任务可以取消，已经开始执行但尚未完成的任务只有它们能响应中断才能取消，取消一个已经完成的任务没有任何影响
+
+Future表示一个任务的生命周期，并提供相应的方法判断任务是否已经开始，完成，取消，以及获取任务结果，取消任务等
 #+BEGIN_SRC java
   public interface Future<V> {
           boolean cancel(boolean mayInterruptIfRunning);
@@ -210,11 +213,11 @@ get方法的行为取决与任务的状态
 
 下载图片任务比渲染文本任务慢的多，可以把下载图片拆分成多个任务
 ** CompletionService
-CompletionService把Executor和BlockingQueue融合在一起 \\ 
-将Callable任务提交给CompletionService执行，然后使用类似队列操作的take和poll方法来获得已知的结果，这些结果会在全部结束时候封装为Future \\ 
+CompletionService把Executor和BlockingQueue融合在一起 
+ 
+将Callable任务提交给CompletionService执行，然后使用类似队列操作的take和poll方法来获得已知的结果，这些结果会在全部结束时候封装为Future 
 
-ExecutorCompletionService实现了CompletionService \\
-ExecutorCompletionService的构造函数中创建一个BlockingQueue来保存计算完成的结果。当计算完成时候，调用FutureTask的done方法。当提交某个任务的时候，该任务将包装成为QueueingFuture, 这是FutureTask的一个子类，然后改写子类的done方法，将结果放入BlockingQueue中。take和poll方法委托给BlockingQueue, 这些方法在得出结果前会阻塞
+ExecutorCompletionService实现了CompletionService。ExecutorCompletionService的构造函数中创建一个BlockingQueue来保存计算完成的结果。当计算完成时候，调用FutureTask的done方法。当提交某个任务的时候，该任务将包装成为QueueingFuture, 这是FutureTask的一个子类，然后改写子类的done方法，将结果放入BlockingQueue中。take和poll方法委托给BlockingQueue, 这些方法在得出结果前会阻塞
 #+BEGIN_SRC java
   public class ExecutorCompletionService<V> implements CompletionService<V> {
 ...

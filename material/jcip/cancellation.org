@@ -114,12 +114,13 @@
    #+END_SRC
    
 *** 可中断的阻塞方法
-    java API中的大多数阻塞方法都是可中断的, 如Thread.sleep, Object.wait, BlockingQueue.put等 \\
-    可中断的阻塞方法有一个共同的特点: 声明抛出InterruptedException异常 \\
+    java API中的大多数阻塞方法都是可中断的, 如Thread.sleep, Object.wait, BlockingQueue.put等 
+    
+    可中断的阻塞方法有一个共同的特点: 声明抛出InterruptedException异常 
+    
     可中断的阻塞方法在阻塞期间会周期性检查当前线程的中断标记, 如果发现当前线程的中断标记为true, 就重置中断标记后提前从阻塞状态返回, 并抛出InterruptedException异常  
     
-    使用中断终止PrimeProducer
-    
+    使用中断终止PrimeProducer    
     #+BEGIN_SRC java
   class PrimeProducer extends Thread {
           private final BlockingQueue<BigInteger> queue;
@@ -267,7 +268,8 @@
           }  
   }  
     #+END_SRC
-    主线程启动InterruptedExceptionHandler线程1s后, 设置InterruptedExceptionHandler线程的中断标记为true. 此时InterruptedExceptionHandler线程应该阻塞在wait方法上, 由于wait方法是可中断的阻塞方法, 所以其检查到中断标记为true时, 将重置当前线程的中断标记后抛出InterruptedException, dosomething方法catch住InterruptedException异常后, 再次将当前线程的中断标记设置为true, run方法检查到中断标记为true, 循环不再继续 \\
+    主线程启动InterruptedExceptionHandler线程1s后, 设置InterruptedExceptionHandler线程的中断标记为true. 此时InterruptedExceptionHandler线程应该阻塞在wait方法上, 由于wait方法是可中断的阻塞方法, 所以其检查到中断标记为true时, 将重置当前线程的中断标记后抛出InterruptedException, dosomething方法catch住InterruptedException异常后, 再次将当前线程的中断标记设置为true, run方法检查到中断标记为true, 循环不再继续 
+
     假如dosomething方法catch住InterruptedException异常后没有设置中断标记, 其调用栈上层的run方法就无法得知线程曾经发生过中断, 循环也就无法终止
 *** 发生了InterruptedException异常后仍然继续循环执行某阻塞方法 
     将中断状态保存下来, 当循环完成后再根据保存下来的中断状态执行相应的操作
@@ -600,8 +602,7 @@
 1. 丢弃了队列中尚未来得及输出的数据
 2. 更严重的是, 假如线程A对LogWriter.log方法的调用因为队列已满而阻塞, 此时停止LoggerThread线程将导致线程A永远阻塞在queue.put方法上　
    
-当停止LogService以后，设置状态不在接受新的任务，并处理完所有已经存在的数据　\\ 
-这种处理方式会导致竞争条件，所以必须手动同步
+当停止LogService以后，设置状态不在接受新的任务，并处理完所有已经存在的数据, 这种处理方式会导致竞争条件，所以必须手动同步
 #+BEGIN_SRC java
   public class LogService {
           private final BlockingQueue<String> queue;

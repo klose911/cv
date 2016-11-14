@@ -209,8 +209,10 @@ CountDownLatch是闭锁的具体实现, CountDownLatch内部维护了一个计�
   }
 #+END_SRC
 ** FutureTask
-   FutureTask用于执行任务, 常用的构造函数为FutureTask(Callable<V> callable), 使用Callable封装任务, 其get方法将返回任务的执行结果 \\ 
-   FutureTask对象具有三种状态: 等待运行, 正在运行, 已完成. 当FutureTask对象处于已完成状态时调用get方法, get方法将立即返回计算结果, 否则get方法会阻塞, 直到FutureTask转变为已完成状态. 计算完成, 抛出异常, 或者被取消都会使得FutureTask的状态变为已完成 \\
+   FutureTask用于执行任务, 常用的构造函数为FutureTask(Callable<V> callable), 使用Callable封装任务, 其get方法将返回任务的执行结果 
+   
+   FutureTask对象具有三种状态: 等待运行, 正在运行, 已完成. 当FutureTask对象处于已完成状态时调用get方法, get方法将立即返回计算结果, 否则get方法会阻塞, 直到FutureTask转变为已完成状态. 计算完成, 抛出异常, 或者被取消都会使得FutureTask的状态变为已完成 
+   
    FutureTask的常见使用场景是封装一个耗时任务, 然后提前开始计算, 当需要计算结果时, 再调用其get方法, 这样可以减少等待计算完成的时间
    
    #+BEGIN_SRC java
@@ -260,13 +262,15 @@ CountDownLatch是闭锁的具体实现, CountDownLatch内部维护了一个计�
    #+END_SRC
    
 ** Semphore
-   Semaphore用于管理permit, 创建Semaphore对象时, 需要指定permit的最大个数　\\
-   调用acquire()方法申请从Semaphore对象中获取一个permit, 如果当前semaphore对象没有可用的permit, 线程将被阻塞, 直到有可用的permit \\
-   调用release()方法将permit放回Semaphore对象. \\
-   Permit不与线程绑定, 一个线程申请的permit, 可以在另一个线程里release \\ 
-   Semaphore通常用于实现资源池,有界的集合，如数据库连接池等
+   Semaphore用于管理permit, 创建Semaphore对象时, 需要指定permit的最大个数　
    
+   调用acquire()方法申请从Semaphore对象中获取一个permit, 如果当前semaphore对象没有可用的permit, 线程将被阻塞, 直到有可用的permit 
    
+   调用release()方法将permit放回Semaphore对象
+   
+   Permit不与线程绑定, 一个线程申请的permit, 可以在另一个线程里release 
+   
+   Semaphore通常用于实现资源池,有界的集合，如数据库连接池等   
    #+BEGIN_SRC java
   public class BoundedHashSet<T> {
           private final Set<T> set;
@@ -305,13 +309,11 @@ CountDownLatch是闭锁的具体实现, CountDownLatch内部维护了一个计�
    #+END_SRC
    
 ** 栅栏
-   栅栏允许一组线程互相等待, 直到该组线程全部到达某个公共屏障点　\\ 
-   闭锁是一组线程等待事件，而栅栏是一组线程互相等待其他线程　\\ 
+   栅栏允许一组线程互相等待, 直到该组线程全部到达某个公共屏障点, 闭锁是一组线程等待事件，而栅栏是一组线程互相等待其他线程　
    
-   CyclicBarrier是栅栏的一种实现，创建CyclicBarrier时需要指定线程组中线程的数量 \\  
-   调用CyclicBarrier对象的await方法, 表示当前线程已到达公共屏障点, 然后等待其他线程到达　\\ 
-   当所有线程到达公共屏障点后, CyclicBarrier对象将释放线程组, 然后重置CyclicBarrier对象的状态. 因此CyclicBarrier对象是可以循环使用的, 反之闭锁的门一旦打开就不会再次关闭 \\
-   如果有线程在等待期间超时或者被中断, 该CyclicBarrier对象被视为已损坏, 随后对await方法的调用都要抛出BrokenBarrierException异常
+   CyclicBarrier是栅栏的一种实现，创建CyclicBarrier时需要指定线程组中线程的数量
+   
+   调用CyclicBarrier对象的await方法, 表示当前线程已到达公共屏障点, 然后等待其他线程到达。当所有线程到达公共屏障点后, CyclicBarrier对象将释放线程组, 然后重置CyclicBarrier对象的状态. 因此CyclicBarrier对象是可以循环使用的, 反之闭锁的门一旦打开就不会再次关闭。如果有线程在等待期间超时或者被中断, 该CyclicBarrier对象被视为已损坏, 随后对await方法的调用都要抛出BrokenBarrierException异常
    
    栅栏可以用于计算中主线程等待另外一组线程并行计算完毕　
    #+BEGIN_SRC java
