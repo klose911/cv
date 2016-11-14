@@ -1,6 +1,6 @@
 #+TITLE: Java并发基础
 #+HTML_HEAD: <link rel="stylesheet" type="text/css" href="css/org.css" />
-#+OPTIONS: num:nil
+#+OPTIONS: num:nil timestamp:nil
 
 * Java线程：概念与原理 
 ** 操作系统中线程和进程 

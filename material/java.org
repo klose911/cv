@@ -1,8 +1,8 @@
 #+TITLE: Java知识
 #+HTML_HEAD: <link rel="stylesheet" type="text/css" href="css/main.css" />
-#+OPTIONS: num:nil
+#+OPTIONS: num:nil timestamp:nil
 
-* jvm 
+* JVM 
  #+CAPTION: java virtual machine
  [[./pic/jvm.png]]
 ** Class Loader

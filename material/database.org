@@ -1,6 +1,6 @@
 #+TITLE: 数据库知识
 #+HTML_HEAD: <link rel="stylesheet" type="text/css" href="css/main.css" />
-#+OPTIONS: num:nil
+#+OPTIONS: num:nil timestamp:nil
 * cluster index 
 ** 聚集索引
 表中存储的数据按照索引的顺序存储 
